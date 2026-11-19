@@ -14,7 +14,7 @@
 
     body {
       font-family: 'Segoe UI', system-ui, sans-serif;
-      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      background: url('bg.jpg') center center / cover no-repeat fixed;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -23,6 +23,14 @@
       color: #fff;
       overflow: hidden;
       user-select: none;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      z-index: 0;
     }
 
     /* Floating particles background */
@@ -146,31 +154,20 @@
     }
 
     .coin-btn {
-      width: 200px;
-      height: 200px;
-      border-radius: 20px;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
       border: none;
       cursor: pointer;
       outline: none;
       position: relative;
-      background: none;
-      padding: 0;
+      background: radial-gradient(circle at 35% 35%, #ffe259, #f7971e 60%, #c0620a);
       box-shadow:
         0 0 0 6px rgba(247,151,30,0.25),
-        0 0 40px rgba(247,151,30,0.3),
+        0 0 40px rgba(247,151,30,0.4),
         0 8px 32px rgba(0,0,0,0.5);
       transition: transform 0.08s, box-shadow 0.08s;
       -webkit-tap-highlight-color: transparent;
-      overflow: hidden;
-    }
-
-    .coin-btn img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      pointer-events: none;
-      border-radius: 20px;
     }
 
     .coin-btn:active,
@@ -180,6 +177,15 @@
         0 0 0 4px rgba(247,151,30,0.2),
         0 0 20px rgba(247,151,30,0.3),
         0 4px 16px rgba(0,0,0,0.5);
+    }
+
+    .coin-btn::before {
+      content: '💰';
+      font-size: 80px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
 
     /* Ripple ring */
@@ -309,9 +315,7 @@
   </div>
 
   <div class="coin-wrapper">
-    <button class="coin-btn" id="coin" aria-label="Нажми для клика">
-      <img src="cat.jpg" alt="кот" />
-    </button>
+    <button class="coin-btn" id="coin" aria-label="Нажми для клика"></button>
   </div>
 
   <div class="level-badge">
