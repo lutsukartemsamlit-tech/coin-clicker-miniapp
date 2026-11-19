@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Кликер</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    /* Floating particles background */
+    .particles {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.15;
+      animation: float linear infinite;
+    }
+
+    @keyframes float {
+      0%   { transform: translateY(100vh) scale(0); opacity: 0; }
+      10%  { opacity: 0.15; }
+      90%  { opacity: 0.15; }
+      100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      padding: 24px 16px;
+      width: 100%;
+      max-width: 360px;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+    }
+    .header h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      background: linear-gradient(90deg, #f7971e, #ffd200);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .header p {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.5);
+      margin-top: 4px;
+    }
+
+    /* Score card */
+    .score-card {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 20px 32px;
+      text-align: center;
+      width: 100%;
+    }
+    .score-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: rgba(255,255,255,0.45);
+    }
+    .score-value {
+      font-size: 3rem;
+      font-weight: 800;
+      line-height: 1.1;
+      background: linear-gradient(90deg, #f7971e, #ffd200);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transition: transform 0.1s;
+    }
+    .score-value.bump {
+      transform: scale(1.12);
+    }
+    .score-sub {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.4);
+      margin-top: 4px;
+    }
+
+    /* Stats row */
+    .stats {
+      display: flex;
+      gap: 12px;
+      width: 100%;
+    }
+    .stat-box {
+      flex: 1;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      padding: 12px 8px;
+      text-align: center;
+    }
+    .stat-box .s-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: rgba(255,255,255,0.4);
+    }
+    .stat-box .s-val {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #ffd200;
+      margin-top: 2px;
+    }
+
+    /* Coin button */
+    .coin-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .coin-btn {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      outline: none;
+      position: relative;
+      background: radial-gradient(circle at 35% 35%, #ffe259, #f7971e 60%, #c0620a);
+      box-shadow:
+        0 0 0 6px rgba(247,151,30,0.25),
+        0 0 40px rgba(247,151,30,0.4),
+        0 8px 32px rgba(0,0,0,0.5);
+      transition: transform 0.08s, box-shadow 0.08s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .coin-btn:active,
+    .coin-btn.pressed {
+      transform: scale(0.91);
+      box-shadow:
+        0 0 0 4px rgba(247,151,30,0.2),
+        0 0 20px rgba(247,151,30,0.3),
+        0 4px 16px rgba(0,0,0,0.5);
+    }
+
+    .coin-btn::before {
+      content: '💰';
+      font-size: 80px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    /* Ripple ring */
+    .ring {
+      position: absolute;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      border: 3px solid rgba(247,151,30,0.6);
+      animation: ring-out 0.5s ease-out forwards;
+      pointer-events: none;
+    }
+    @keyframes ring-out {
+      0%   { transform: scale(1); opacity: 0.8; }
+      100% { transform: scale(1.9); opacity: 0; }
+    }
+
+    /* Floating +1 labels */
+    .float-label {
+      position: fixed;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #ffd200;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+      pointer-events: none;
+      animation: fly-up 0.9s ease-out forwards;
+      z-index: 999;
+    }
+    @keyframes fly-up {
+      0%   { opacity: 1; transform: translateY(0) scale(1); }
+      80%  { opacity: 0.8; }
+      100% { opacity: 0; transform: translateY(-90px) scale(0.7); }
+    }
+
+    /* Upgrade button */
+    .upgrade-btn {
+      width: 100%;
+      padding: 14px;
+      border-radius: 16px;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      background: linear-gradient(90deg, #f7971e, #ffd200);
+      color: #1a0a00;
+      box-shadow: 0 4px 20px rgba(247,151,30,0.4);
+      transition: transform 0.1s, opacity 0.2s;
+    }
+    .upgrade-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+    .upgrade-btn:not(:disabled):active {
+      transform: scale(0.97);
+    }
+
+    /* Level badge */
+    .level-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,210,0,0.15);
+      border: 1px solid rgba(255,210,0,0.35);
+      border-radius: 999px;
+      padding: 6px 16px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #ffd200;
+    }
+
+    /* Progress bar */
+    .progress-wrap {
+      width: 100%;
+    }
+    .progress-bar-bg {
+      width: 100%;
+      height: 8px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #f7971e, #ffd200);
+      border-radius: 999px;
+      transition: width 0.3s ease;
+    }
+    .progress-label {
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.4);
+      margin-top: 5px;
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+
+<div class="particles" id="particles"></div>
+
+<div class="container">
+  <div class="header">
+    <h1>💎 КойнКликер</h1>
+    <p>Нажимай — зарабатывай монеты!</p>
+  </div>
+
+  <div class="score-card">
+    <div class="score-label">Монеты</div>
+    <div class="score-value" id="score">0</div>
+    <div class="score-sub">монет всего</div>
+  </div>
+
+  <div class="stats">
+    <div class="stat-box">
+      <div class="s-label">За клик</div>
+      <div class="s-val" id="per-click">+0.1</div>
+    </div>
+    <div class="stat-box">
+      <div class="s-label">Кликов</div>
+      <div class="s-val" id="total-clicks">0</div>
+    </div>
+    <div class="stat-box">
+      <div class="s-label">Лучший</div>
+      <div class="s-val" id="best-score">0</div>
+    </div>
+  </div>
+
+  <div class="coin-wrapper">
+    <button class="coin-btn" id="coin" aria-label="Нажми для клика"></button>
+  </div>
+
+  <div class="level-badge">
+    <span>⚡</span>
+    <span id="level-text">Уровень 1</span>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+    </div>
+    <div class="progress-label" id="progress-label">0 / 100 до следующего уровня</div>
+  </div>
+
+  <button class="upgrade-btn" id="upgrade-btn" disabled>
+    🚀 Улучшить клик — <span id="upgrade-cost">50</span> монет
+  </button>
+</div>
+
+<script>
+  // ── Telegram WebApp init ──────────────────────────────────────────────────
+  const tg = window.Telegram?.WebApp;
+  if (tg) {
+    tg.ready();
+    tg.expand();
+  }
+
+  // ── State ─────────────────────────────────────────────────────────────────
+  const STORAGE_KEY = 'clicker_v1';
+
+  function defaultState() {
+    return { coins: 0, totalClicks: 0, perClick: 0.1, level: 1, bestScore: 0 };
+  }
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? { ...defaultState(), ...JSON.parse(raw) } : defaultState();
+    } catch { return defaultState(); }
+  }
+
+  function saveState() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+
+  let state = loadState();
+
+  // ── Upgrade config ────────────────────────────────────────────────────────
+  function upgradeCost(level) {
+    return Math.floor(50 * Math.pow(2.2, level - 1));
+  }
+
+  // ── DOM refs ──────────────────────────────────────────────────────────────
+  const scoreEl      = document.getElementById('score');
+  const perClickEl   = document.getElementById('per-click');
+  const totalClickEl = document.getElementById('total-clicks');
+  const bestEl       = document.getElementById('best-score');
+  const levelEl      = document.getElementById('level-text');
+  const progressFill = document.getElementById('progress-fill');
+  const progressLbl  = document.getElementById('progress-label');
+  const upgradeBtn   = document.getElementById('upgrade-btn');
+  const upgradeCostEl= document.getElementById('upgrade-cost');
+  const coinBtn      = document.getElementById('coin');
+
+  // ── Render ────────────────────────────────────────────────────────────────
+  function render() {
+    scoreEl.textContent      = formatNum(state.coins);
+    perClickEl.textContent   = '+' + state.perClick.toFixed(1);
+    totalClickEl.textContent = formatNum(state.totalClicks);
+    bestEl.textContent       = formatNum(state.bestScore);
+    levelEl.textContent      = 'Уровень ' + state.level;
+
+    const cost      = upgradeCost(state.level);
+    const nextLevel = state.level + 1;
+    const threshold = upgradeCost(state.level);  // reuse as level progress threshold
+    const pct       = Math.min(100, Math.floor((state.coins / cost) * 100));
+
+    progressFill.style.width = pct + '%';
+    progressLbl.textContent  = formatNum(state.coins) + ' / ' + formatNum(cost) + ' до улучшения';
+
+    upgradeCostEl.textContent = formatNum(cost);
+    upgradeBtn.disabled = state.coins < cost;
+  }
+
+  function formatNum(n) {
+    if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + 'M';
+    if (n >= 1_000)     return (n / 1_000).toFixed(1) + 'K';
+    // Show one decimal place for fractional values under 1000
+    return Number.isInteger(n) ? String(n) : n.toFixed(1);
+  }
+
+  // ── Click handler ─────────────────────────────────────────────────────────
+  coinBtn.addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    doClick(e.clientX, e.clientY);
+  });
+
+  // Multi-touch support
+  coinBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    for (const t of e.changedTouches) {
+      doClick(t.clientX, t.clientY);
+    }
+  }, { passive: false });
+
+  function doClick(x, y) {
+    state.coins = Math.round((state.coins + state.perClick) * 10) / 10;
+    state.totalClicks += 1;
+    if (state.coins > state.bestScore) state.bestScore = state.coins;
+
+    // Haptic
+    tg?.HapticFeedback?.impactOccurred('light');
+
+    // Visual feedback
+    spawnFloatLabel(x, y, '+' + state.perClick.toFixed(1));
+    spawnRing();
+    bumpScore();
+
+    saveState();
+    render();
+  }
+
+  function bumpScore() {
+    scoreEl.classList.remove('bump');
+    void scoreEl.offsetWidth;
+    scoreEl.classList.add('bump');
+    setTimeout(() => scoreEl.classList.remove('bump'), 120);
+  }
+
+  function spawnFloatLabel(x, y, text) {
+    const el = document.createElement('div');
+    el.className = 'float-label';
+    el.textContent = text;
+    el.style.left = (x - 20) + 'px';
+    el.style.top  = (y - 20) + 'px';
+    document.body.appendChild(el);
+    el.addEventListener('animationend', () => el.remove());
+  }
+
+  function spawnRing() {
+    const wrapper = document.querySelector('.coin-wrapper');
+    const ring = document.createElement('div');
+    ring.className = 'ring';
+    wrapper.appendChild(ring);
+    ring.addEventListener('animationend', () => ring.remove());
+  }
+
+  // ── Upgrade handler ───────────────────────────────────────────────────────
+  upgradeBtn.addEventListener('click', () => {
+    const cost = upgradeCost(state.level);
+    if (state.coins < cost) return;
+    state.coins    -= cost;
+    state.perClick = Math.round((state.perClick + 0.1) * 10) / 10;
+    state.level    += 1;
+    tg?.HapticFeedback?.notificationOccurred('success');
+    saveState();
+    render();
+  });
+
+  // ── Particles background ──────────────────────────────────────────────────
+  function createParticles() {
+    const container = document.getElementById('particles');
+    const colors = ['#f7971e','#ffd200','#ff6b6b','#a18cd1','#fbc2eb'];
+    for (let i = 0; i < 18; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      const size = 6 + Math.random() * 14;
+      p.style.cssText = `
+        width:${size}px; height:${size}px;
+        left:${Math.random()*100}%;
+        background:${colors[Math.floor(Math.random()*colors.length)]};
+        animation-duration:${8 + Math.random()*12}s;
+        animation-delay:${-Math.random()*15}s;
+      `;
+      container.appendChild(p);
+    }
+  }
+  createParticles();
+
+  // ── Initial render ────────────────────────────────────────────────────────
+  render();
+</script>
+</body>
+</html>
