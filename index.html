@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Р”С‹Рј РљР»РёРє</title>
+  <title>Дым Клик</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -36,45 +36,46 @@
       100% { transform: translateY(-10vh) scale(1); opacity: 0; }
     }
 
-    /* в”Ђв”Ђ Tabs в”Ђв”Ђ */
+    /* ── Tabs (bottom navigation) ── */
     .tabs {
-      position: relative;
-      z-index: 2;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
       display: flex;
-      width: 100%;
-      max-width: 420px;
-      margin-top: 12px;
-      border-radius: 16px;
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(255,255,255,0.1);
-      overflow-x: auto;
-      overflow-y: hidden;
-      scrollbar-width: none;
+      justify-content: space-around;
+      background: rgba(20,20,40,0.95);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding: 8px 0 max(8px, env(safe-area-inset-bottom));
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
     }
-    .tabs::-webkit-scrollbar { display: none; }
     .tab-btn {
-      flex-shrink: 0;
-      padding: 10px 14px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 8px;
       border: none;
       background: none;
-      color: rgba(255,255,255,0.5);
-      font-size: 0.8rem;
+      color: rgba(255,255,255,0.4);
+      font-size: 0.65rem;
       font-weight: 600;
       cursor: pointer;
-      transition: background 0.2s, color 0.2s;
+      transition: color 0.2s;
       white-space: nowrap;
     }
-    .tab-btn.active {
-      background: linear-gradient(90deg,#f7971e,#ffd200);
-      color: #1a0a00;
-      border-radius: 12px;
-    }
+    .tab-btn .tab-icon { font-size: 1.4rem; line-height: 1; }
+    .tab-btn.active { color: #ffd200; }
+    .tab-btn.active .tab-icon { transform: scale(1.1); }
 
-    /* в”Ђв”Ђ Pages в”Ђв”Ђ */
+    /* ── Pages ── */
     .page { display: none; width: 100%; }
     .page.active { display: block; }
 
-    /* в”Ђв”Ђ Main game container в”Ђв”Ђ */
+    /* ── Main game container ── */
     .container {
       position: relative;
       z-index: 1;
@@ -82,7 +83,7 @@
       flex-direction: column;
       align-items: center;
       gap: 16px;
-      padding: 16px 16px 32px;
+      padding: 16px 16px 100px;
       width: 100%;
       max-width: 360px;
     }
@@ -139,7 +140,7 @@
       -webkit-tap-highlight-color: transparent;
     }
     .coin-btn:active { transform: scale(0.91); box-shadow: 0 0 0 4px rgba(247,151,30,0.2), 0 0 20px rgba(247,151,30,0.3), 0 4px 16px rgba(0,0,0,0.5); }
-    .coin-btn::before { content: 'рџ’°'; font-size: 80px; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); }
+    .coin-btn::before { content: '💰'; font-size: 80px; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); }
 
     .ring {
       position: absolute; width: 180px; height: 180px; border-radius: 50%;
@@ -179,7 +180,7 @@
     .progress-bar-fill { height: 100%; background: linear-gradient(90deg,#f7971e,#ffd200); border-radius: 999px; transition: width 0.3s ease; }
     .progress-label { font-size: 0.7rem; color: rgba(255,255,255,0.4); margin-top: 5px; text-align: right; }
 
-    /* в”Ђв”Ђ Generic container в”Ђв”Ђ */
+    /* ── Generic container ── */
     .generic-container {
       position: relative;
       z-index: 1;
@@ -187,7 +188,7 @@
       flex-direction: column;
       align-items: center;
       gap: 16px;
-      padding: 16px 16px 32px;
+      padding: 16px 16px 100px;
       width: 100%;
       max-width: 360px;
     }
@@ -243,7 +244,7 @@
     .case-buy-btn:disabled { opacity: 0.35; cursor: not-allowed; }
     .case-buy-btn:not(:disabled):active { transform: scale(0.97); }
 
-    /* в”Ђв”Ђ Profile promo input в”Ђв”Ђ */
+    /* ── Profile promo input ── */
     .promo-box {
       width: 100%;
       background: rgba(255,255,255,0.07);
@@ -300,7 +301,7 @@
     .promo-status { font-size: 0.75rem; color: rgba(255,255,255,0.5); }
     .promo-status.used { color: #ff6b6b; }
 
-    /* в”Ђв”Ђ Empty state в”Ђв”Ђ */
+    /* ── Empty state ── */
     .empty-state {
       text-align: center;
       color: rgba(255,255,255,0.5);
@@ -308,7 +309,7 @@
       padding: 40px 20px;
     }
 
-    /* в”Ђв”Ђ Case opening animation overlay в”Ђв”Ђ */
+    /* ── Case opening animation overlay ── */
     .case-opening-overlay {
       display: none;
       position: fixed;
@@ -394,7 +395,7 @@
     .case-claim-btn.show { opacity: 1; }
     .case-claim-btn:active { transform: scale(0.95); }
 
-    /* в”Ђв”Ђ Modal overlay в”Ђв”Ђ */
+    /* ── Modal overlay ── */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -430,144 +431,159 @@
 
 <div class="particles" id="particles"></div>
 
-<!-- Tabs -->
+<!-- Tabs (bottom navigation) -->
 <div class="tabs">
-  <button class="tab-btn active" id="tab-game" onclick="switchTab('game')">рџЋ® РљР»РёРєРµСЂ</button>
-  <button class="tab-btn" id="tab-cases" onclick="switchTab('cases')">рџ“¦ РљРµР№СЃС‹</button>
-  <button class="tab-btn" id="tab-shop" onclick="switchTab('shop')">рџ›’ РђСЃСЃРѕСЂС‚РёРјРµРЅС‚</button>
-  <button class="tab-btn" id="tab-cart" onclick="switchTab('cart')">рџ›Ќ РљРѕСЂР·РёРЅР°</button>
-  <button class="tab-btn" id="tab-profile" onclick="switchTab('profile')">рџ‘¤ РџСЂРѕС„РёР»СЊ</button>
+  <button class="tab-btn active" id="tab-game" onclick="switchTab('game')">
+    <div class="tab-icon">🎮</div>
+    <div>Кликер</div>
+  </button>
+  <button class="tab-btn" id="tab-cases" onclick="switchTab('cases')">
+    <div class="tab-icon">📦</div>
+    <div>Кейсы</div>
+  </button>
+  <button class="tab-btn" id="tab-shop" onclick="switchTab('shop')">
+    <div class="tab-icon">🛒</div>
+    <div>Магазин</div>
+  </button>
+  <button class="tab-btn" id="tab-cart" onclick="switchTab('cart')">
+    <div class="tab-icon">🛍</div>
+    <div>Корзина</div>
+  </button>
+  <button class="tab-btn" id="tab-profile" onclick="switchTab('profile')">
+    <div class="tab-icon">👤</div>
+    <div>Профиль</div>
+  </button>
 </div>
 
-<!-- в•ђв•ђ GAME PAGE в•ђв•ђ -->
+<!-- ══ GAME PAGE ══ -->
 <div class="page active" id="page-game">
   <div class="container">
     <div class="header">
-      <h1>рџЊї Р”С‹Рј РљР»РёРє</h1>
-      <p>РќР°Р¶РёРјР°Р№ вЂ” Р·Р°СЂР°Р±Р°С‚С‹РІР°Р№ РјРѕРЅРµС‚С‹!</p>
+      <h1>🌿 Дым Клик</h1>
+      <p>Нажимай — зарабатывай монеты!</p>
     </div>
 
     <div class="score-card">
-      <div class="score-label">РњРѕРЅРµС‚С‹</div>
+      <div class="score-label">Монеты</div>
       <div class="score-value" id="score">0</div>
-      <div class="score-sub">РјРѕРЅРµС‚ РІСЃРµРіРѕ</div>
+      <div class="score-sub">монет всего</div>
     </div>
 
     <div class="stats">
-      <div class="stat-box"><div class="s-label">Р—Р° РєР»РёРє</div><div class="s-val" id="per-click">+0.1</div></div>
-      <div class="stat-box"><div class="s-label">РљР»РёРєРѕРІ</div><div class="s-val" id="total-clicks">0</div></div>
-      <div class="stat-box"><div class="s-label">Р›СѓС‡С€РёР№</div><div class="s-val" id="best-score">0</div></div>
+      <div class="stat-box"><div class="s-label">За клик</div><div class="s-val" id="per-click">+0.1</div></div>
+      <div class="stat-box"><div class="s-label">Кликов</div><div class="s-val" id="total-clicks">0</div></div>
+      <div class="stat-box"><div class="s-label">Лучший</div><div class="s-val" id="best-score">0</div></div>
     </div>
 
     <div class="coin-wrapper">
-      <button class="coin-btn" id="coin" aria-label="РќР°Р¶РјРё РґР»СЏ РєР»РёРєР°"></button>
+      <button class="coin-btn" id="coin" aria-label="Нажми для клика"></button>
     </div>
 
-    <div class="level-badge"><span>вљЎ</span><span id="level-text">РЈСЂРѕРІРµРЅСЊ 1</span></div>
+    <div class="level-badge"><span>⚡</span><span id="level-text">Уровень 1</span></div>
 
     <div class="progress-wrap">
       <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-fill" style="width:0%"></div></div>
-      <div class="progress-label" id="progress-label">0 / 50 РґРѕ СѓР»СѓС‡С€РµРЅРёСЏ</div>
+      <div class="progress-label" id="progress-label">0 / 50 до улучшения</div>
     </div>
 
     <button class="upgrade-btn" id="upgrade-btn" disabled>
-      рџљЂ РЈР»СѓС‡С€РёС‚СЊ РєР»РёРє вЂ” <span id="upgrade-cost">50</span> РјРѕРЅРµС‚
+      🚀 Улучшить клик — <span id="upgrade-cost">50</span> монет
     </button>
   </div>
 </div>
 
-<!-- в•ђв•ђ CASES PAGE в•ђв•ђ -->
+<!-- ══ CASES PAGE ══ -->
 <div class="page" id="page-cases">
   <div class="generic-container">
-    <div class="page-title">рџ“¦ РњР°РіР°Р·РёРЅ РєРµР№СЃРѕРІ</div>
-    <div class="balance-display">Р‘Р°Р»Р°РЅСЃ: <span id="cases-balance">0</span> РјРѕРЅРµС‚</div>
+    <div class="page-title">📦 Магазин кейсов</div>
+    <div class="balance-display">Баланс: <span id="cases-balance">0</span> монет</div>
 
     <div class="case-card">
-      <div class="case-icon">рџџў</div>
-      <div class="case-name">Р›С‘РіРєРёР№ РєРµР№СЃ</div>
-      <div class="case-desc">РќРµР±РѕР»СЊС€Р°СЏ РЅР°РіСЂР°РґР° вЂ” С…РѕСЂРѕС€РёР№ СЃС‚Р°СЂС‚ РґР»СЏ РЅРѕРІРёС‡РєР°</div>
-      <div class="case-reward">РќР°РіСЂР°РґР°: РёР·РѕР±СЂР°Р¶РµРЅРёРµ + РїСЂРѕРјРѕРєРѕРґ</div>
+      <div class="case-icon">🟢</div>
+      <div class="case-name">Лёгкий кейс</div>
+      <div class="case-desc">Небольшая награда — хороший старт для новичка</div>
+      <div class="case-reward">Награда: изображение + промокод</div>
       <button class="case-buy-btn tier1" id="case-btn-1" onclick="buyCase(1)">
-        рџ›’ РљСѓРїРёС‚СЊ Р·Р° 1 000 РјРѕРЅРµС‚
+        🛒 Купить за 1 000 монет
       </button>
     </div>
 
     <div class="case-card">
-      <div class="case-icon">рџ”µ</div>
-      <div class="case-name">РЎСЂРµРґРЅРёР№ РєРµР№СЃ</div>
-      <div class="case-desc">РЈРІРµР»РёС‡РµРЅРЅС‹Рµ С€Р°РЅСЃС‹ РЅР° РєСЂСѓС‚СѓСЋ РЅР°РіСЂР°РґСѓ</div>
-      <div class="case-reward">РќР°РіСЂР°РґР°: 1 000вЂ“4 000 РјРѕРЅРµС‚</div>
+      <div class="case-icon">🔵</div>
+      <div class="case-name">Средний кейс</div>
+      <div class="case-desc">Увеличенные шансы на крутую награду</div>
+      <div class="case-reward">Награда: 1 000–4 000 монет</div>
       <button class="case-buy-btn tier2" id="case-btn-2" onclick="buyCase(2)">
-        рџ›’ РљСѓРїРёС‚СЊ Р·Р° 2 000 РјРѕРЅРµС‚
+        🛒 Купить за 2 000 монет
       </button>
     </div>
 
     <div class="case-card">
-      <div class="case-icon">рџџЎ</div>
-      <div class="case-name">Р—РѕР»РѕС‚РѕР№ РєРµР№СЃ</div>
-      <div class="case-desc">РўРѕРїРѕРІС‹Рµ РЅР°РіСЂР°РґС‹ вЂ” С‚РѕР»СЊРєРѕ РґР»СЏ РЅР°СЃС‚РѕСЏС‰РёС… РєР»РёРєРµСЂРѕРІ</div>
-      <div class="case-reward">РќР°РіСЂР°РґР°: 2 500вЂ“10 000 РјРѕРЅРµС‚</div>
+      <div class="case-icon">🟡</div>
+      <div class="case-name">Золотой кейс</div>
+      <div class="case-desc">Топовые награды — только для настоящих кликеров</div>
+      <div class="case-reward">Награда: 2 500–10 000 монет</div>
       <button class="case-buy-btn tier3" id="case-btn-3" onclick="buyCase(3)">
-        рџ›’ РљСѓРїРёС‚СЊ Р·Р° 3 000 РјРѕРЅРµС‚
+        🛒 Купить за 3 000 монет
       </button>
     </div>
   </div>
 </div>
 
-<!-- в•ђв•ђ SHOP PAGE в•ђв•ђ -->
+<!-- ══ SHOP PAGE ══ -->
 <div class="page" id="page-shop">
   <div class="generic-container">
-    <div class="page-title">рџ›’ РђСЃСЃРѕСЂС‚РёРјРµРЅС‚</div>
-    <div class="empty-state">РЎРєРѕСЂРѕ Р·РґРµСЃСЊ РїРѕСЏРІСЏС‚СЃСЏ С‚РѕРІР°СЂС‹ РґР»СЏ РїРѕРєСѓРїРєРё</div>
+    <div class="page-title">🛒 Магазин</div>
+    <div class="empty-state">Скоро здесь появятся товары для покупки</div>
   </div>
 </div>
 
-<!-- в•ђв•ђ CART PAGE в•ђв•ђ -->
+<!-- ══ CART PAGE ══ -->
 <div class="page" id="page-cart">
   <div class="generic-container">
-    <div class="page-title">рџ›Ќ РљРѕСЂР·РёРЅР°</div>
-    <div class="empty-state">Р’Р°С€Р° РєРѕСЂР·РёРЅР° РїСѓСЃС‚Р°</div>
+    <div class="page-title">🛍 Корзина</div>
+    <div class="empty-state">Ваша корзина пуста</div>
   </div>
 </div>
 
-<!-- в•ђв•ђ PROFILE PAGE в•ђв•ђ -->
+<!-- ══ PROFILE PAGE ══ -->
 <div class="page" id="page-profile">
   <div class="generic-container">
-    <div class="page-title">рџ‘¤ РџСЂРѕС„РёР»СЊ</div>
-    <div class="balance-display">Р‘Р°Р»Р°РЅСЃ: <span id="profile-balance">0</span> РјРѕРЅРµС‚</div>
+    <div class="page-title">👤 Профиль</div>
+    <div class="balance-display">Баланс: <span id="profile-balance">0</span> монет</div>
 
     <div class="promo-box">
-      <div class="case-name">рџЋЃ РђРєС‚РёРІРёСЂРѕРІР°С‚СЊ РїСЂРѕРјРѕРєРѕРґ</div>
-      <input type="text" class="promo-input" id="promo-input" placeholder="Р’РІРµРґРё РїСЂРѕРјРѕРєРѕРґ" maxlength="20" />
-      <button class="promo-btn" onclick="activatePromo()">РђРєС‚РёРІРёСЂРѕРІР°С‚СЊ</button>
+      <div class="case-name">🎁 Активировать промокод</div>
+      <input type="text" class="promo-input" id="promo-input" placeholder="Введи промокод" maxlength="20" />
+      <button class="promo-btn" onclick="activatePromo()">Активировать</button>
     </div>
 
     <div class="promo-box">
-      <div class="case-name">рџ“њ РњРѕРё РїСЂРѕРјРѕРєРѕРґС‹</div>
+      <div class="case-name">📜 Мои промокоды</div>
       <div class="promo-list" id="promo-list">
-        <div class="empty-state">РЈ С‚РµР±СЏ РїРѕРєР° РЅРµС‚ РїСЂРѕРјРѕРєРѕРґРѕРІ</div>
+        <div class="empty-state">У тебя пока нет промокодов</div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- в•ђв•ђ CASE OPENING ANIMATION в•ђв•ђ -->
+<!-- ══ CASE OPENING ANIMATION ══ -->
 <div class="case-opening-overlay" id="case-anim-overlay">
   <div class="case-anim-box">
     <div class="case-items-strip" id="case-items-strip"></div>
     <div class="case-selector"></div>
   </div>
   <div class="case-result-text" id="case-result-text"></div>
-  <button class="case-claim-btn" id="case-claim-btn" onclick="claimCaseReward()">Р—Р°Р±СЂР°С‚СЊ</button>
+  <button class="case-claim-btn" id="case-claim-btn" onclick="claimCaseReward()">Забрать</button>
 </div>
 
-<!-- в•ђв•ђ MODAL в•ђв•ђ -->
+<!-- ══ MODAL ══ -->
 <div class="modal-overlay" id="modal">
   <div class="modal-box">
-    <div class="modal-icon" id="modal-icon">рџЋ‰</div>
-    <div class="modal-title" id="modal-title">РџРѕР·РґСЂР°РІР»СЏРµРј!</div>
-    <div class="modal-text"  id="modal-text">Р’С‹ РѕС‚РєСЂС‹Р»Рё РєРµР№СЃ</div>
-    <button class="modal-close" onclick="closeModal()">Р—Р°РєСЂС‹С‚СЊ</button>
+    <div class="modal-icon" id="modal-icon">🎉</div>
+    <div class="modal-title" id="modal-title">Поздравляем!</div>
+    <div class="modal-text"  id="modal-text">Вы открыли кейс</div>
+    <button class="modal-close" onclick="closeModal()">Закрыть</button>
   </div>
 </div>
 
@@ -575,7 +591,7 @@
   const tg = window.Telegram?.WebApp;
   if (tg) { tg.ready(); tg.expand(); }
 
-  // в”Ђв”Ђ State в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+  // ── State ──────────────────────────────────────────────────────────────────
   const STORAGE_KEY = 'dym_clicker_v3';
 
   function defaultState() {
@@ -599,16 +615,16 @@
 
   let state = loadState();
 
-  // в”Ђв”Ђ Cases config в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+  // ── Cases config ───────────────────────────────────────────────────────────
   const CASES = {
-    1: { cost: 1000, items: ['1000-1.jpg','1000-2.jpg','1000-3.jpg'], icon: 'рџџў', name: 'Р›С‘РіРєРёР№ РєРµР№СЃ', hasPromo: true },
-    2: { cost: 2000, min: 1000, max: 4000,  icon: 'рџ”µ', name: 'РЎСЂРµРґРЅРёР№ РєРµР№СЃ' },
-    3: { cost: 3000, min: 2500, max: 10000, icon: 'рџџЎ', name: 'Р—РѕР»РѕС‚РѕР№ РєРµР№СЃ' },
+    1: { cost: 1000, items: ['1000-1.jpg','1000-2.jpg','1000-3.jpg'], icon: '🟢', name: 'Лёгкий кейс', hasPromo: true },
+    2: { cost: 2000, min: 1000, max: 4000,  icon: '🔵', name: 'Средний кейс' },
+    3: { cost: 3000, min: 2500, max: 10000, icon: '🟡', name: 'Золотой кейс' },
   };
 
   let currentCaseReward = null;
 
-  // в”Ђв”Ђ Tab switch в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+  // ── Tab switch ─────────────────────────────────────────────────────────────
   function switchTab(tab) {
     ['game','cases','shop','cart','profile'].forEach(t => {
       document.getElementById('page-' + t).classList.toggle('active', t === tab);
@@ -618,10 +634,10 @@
     if (tab === 'profile') renderProfile();
   }
 
-  // в”Ђв”Ђ Upgrade config в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+  // ── Upgrade config ─────────────────────────────────────────────────────────
   function upgradeCost(level) { return Math.floor(50 * Math.pow(2.2, level - 1)); }
 
-  // в”Ђв”Ђ DOM refs в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+  // ── DOM refs ───────────────────────────────────────────────────────────────
   const scoreEl       = document.getElementById('score');
   const perClickEl    = document.getElementById('per-click');
   const totalClickEl  = document.getElementById('total-clicks');
@@ -633,23 +649,23 @@
   const upgradeCostEl = document.getElementById('upgrade-cost');
   const coinBtn       = document.getElementById('coin');
 
-  // в”Ђв”Ђ Render game в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+  // ── Render game ────────────────────────────────────────────────────────────
   function render() {
     scoreEl.textContent      = formatNum(state.coins);
     perClickEl.textContent   = '+' + state.perClick.toFixed(1);
     totalClickEl.textContent = formatNum(state.totalClicks);
     bestEl.textContent       = formatNum(state.bestScore);
-    levelEl.textContent      = 'РЈСЂРѕРІРµРЅСЊ ' + state.level;
+    levelEl.textContent      = 'Уровень ' + state.level;
 
     const cost = upgradeCost(state.level);
     const pct  = Math.min(100, Math.floor((state.coins / cost) * 100));
     progressFill.style.width  = pct + '%';
-    progressLbl.textContent   = formatNum(state.coins) + ' / ' + formatNum(cost) + ' РґРѕ СѓР»СѓС‡С€РµРЅРёСЏ';
+    progressLbl.textContent   = formatNum(state.coins) + ' / ' + formatNum(cost) + ' до улучшения';
     upgradeCostEl.textContent = formatNum(cost);
     upgradeBtn.disabled       = state.coins < cost;
   }
 
-  // в”Ђв”Ђ Render cases в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+  // ── Render cases ───────────────────────────────────────────────────────────
   function renderCases() {
     document.getElementById('cases-balance').textContent = formatNum(state.coins);
     for (const id of [1, 2, 3]) {
@@ -658,14 +674,14 @@
     }
   }
 
-  // в”Ђв”Ђ Render profile в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+  // ── Render profile ─────────────────────────────────────────────────────────
   function renderProfile() {
     document.getElementById('profile-balance').textContent = formatNum(state.coins);
     const list = document.getElementById('promo-list');
     list.innerHTML = '';
 
     if (!state.promoCodes || state.promoCodes.length === 0) {
-      list.innerHTML = '<div class="empty-state">РЈ С‚РµР±СЏ РїРѕРєР° РЅРµС‚ РїСЂРѕРјРѕРєРѕРґРѕРІ</div>';
+      list.innerHTML = '<div class="empty-state">У тебя пока нет промокодов</div>';
       return;
     }
 
@@ -674,7 +690,7 @@
       div.className = 'promo-item';
       div.innerHTML = `
         <span class="promo-code">${p.code}</span>
-        <span class="promo-status ${p.used ? 'used' : ''}">${p.used ? 'РСЃРїРѕР»СЊР·РѕРІР°РЅ' : 'РђРєС‚РёРІРЅС‹Р№'}</span>
+        <span class="promo-status ${p.used ? 'used' : ''}">${p.used ? 'Использован' : 'Активный'}</span>
       `;
       list.appendChild(div);
     });
@@ -686,7 +702,7 @@
     return Number.isInteger(n) ? String(n) : n.toFixed(1);
   }
 
-  // в”Ђв”Ђ Click handler в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+  // ── Click handler ──────────────────────────────────────────────────────────
   coinBtn.addEventListener('click', (e) => {
     if (coinBtn._touchFired) { coinBtn._touchFired = false; return; }
     doClick(e.clientX, e.clientY);
@@ -732,7 +748,7 @@
     ring.addEventListener('animationend', () => ring.remove());
   }
 
-  // в”Ђв”Ђ Upgrade handler в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+  // ── Upgrade handler ────────────────────────────────────────────────────────
   upgradeBtn.addEventListener('click', () => {
     const cost = upgradeCost(state.level);
     if (state.coins < cost) return;
@@ -744,7 +760,7 @@
     render();
   });
 
-  // в”Ђв”Ђ Case handler в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+  // ── Case handler ───────────────────────────────────────────────────────────
   function buyCase(id) {
     const c = CASES[id];
     if (state.coins < c.cost) return;
@@ -764,11 +780,11 @@
       saveState();
       render();
       renderCases();
-      showModal(c.icon, c.name, 'РўС‹ РІС‹РёРіСЂР°Р» ' + formatNum(reward) + ' РјРѕРЅРµС‚! рџЋ‰\nРњРѕРЅРµС‚С‹ Р·Р°С‡РёСЃР»РµРЅС‹ РЅР° СЃС‡С‘С‚.');
+      showModal(c.icon, c.name, 'Ты выиграл ' + formatNum(reward) + ' монет! 🎉\nМонеты зачислены на счёт.');
     }
   }
 
-  // в”Ђв”Ђ Case opening animation в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+  // ── Case opening animation ─────────────────────────────────────────────────
   function openCaseAnimation(c) {
     const overlay = document.getElementById('case-anim-overlay');
     const strip   = document.getElementById('case-items-strip');
@@ -816,7 +832,7 @@
       saveState();
 
       currentCaseReward = { image: wonImage, promo: promoCode };
-      resultText.textContent = 'рџЋ‰ РР·РѕР±СЂР°Р¶РµРЅРёРµ + РџСЂРѕРјРѕРєРѕРґ!';
+      resultText.textContent = '🎉 Изображение + Промокод!';
       resultText.classList.add('show');
       claimBtn.classList.add('show');
       tg?.HapticFeedback?.notificationOccurred('success');
@@ -828,13 +844,13 @@
     overlay.classList.remove('show');
     
     if (currentCaseReward) {
-      showModal('рџЋЃ', 'РќР°РіСЂР°РґР° РїРѕР»СѓС‡РµРЅР°', 
-        'РР·РѕР±СЂР°Р¶РµРЅРёРµ: ' + currentCaseReward.image + '\n\nРџСЂРѕРјРѕРєРѕРґ: ' + currentCaseReward.promo + '\n\nРџСЂРѕРјРѕРєРѕРґ СЃРѕС…СЂР°РЅС‘РЅ РІ РїСЂРѕС„РёР»Рµ!');
+      showModal('🎁', 'Награда получена', 
+        'Изображение: ' + currentCaseReward.image + '\n\nПромокод: ' + currentCaseReward.promo + '\n\nПромокод сохранён в профиле!');
       currentCaseReward = null;
     }
   }
 
-  // в”Ђв”Ђ Promo code logic в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+  // ── Promo code logic ───────────────────────────────────────────────────────
   function generatePromoCode() {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     let code = '';
@@ -849,14 +865,14 @@
     const code = input.value.trim().toUpperCase();
     
     if (!code) {
-      showModal('вљ пёЏ', 'РћС€РёР±РєР°', 'Р’РІРµРґРё РїСЂРѕРјРѕРєРѕРґ');
+      showModal('⚠️', 'Ошибка', 'Введи промокод');
       return;
     }
 
     state.usedPromoCodes = state.usedPromoCodes || [];
     
     if (state.usedPromoCodes.includes(code)) {
-      showModal('вќЊ', 'РћС€РёР±РєР°', 'Р­С‚РѕС‚ РїСЂРѕРјРѕРєРѕРґ СѓР¶Рµ РёСЃРїРѕР»СЊР·РѕРІР°РЅ');
+      showModal('❌', 'Ошибка', 'Этот промокод уже использован');
       input.value = '';
       return;
     }
@@ -864,12 +880,12 @@
     const existingPromo = state.promoCodes?.find(p => p.code === code && !p.used);
     
     if (existingPromo) {
-      showModal('вќЊ', 'РћС€РёР±РєР°', 'РќРµР»СЊР·СЏ Р°РєС‚РёРІРёСЂРѕРІР°С‚СЊ СЃРІРѕР№ РїСЂРѕРјРѕРєРѕРґ');
+      showModal('❌', 'Ошибка', 'Нельзя активировать свой промокод');
       input.value = '';
       return;
     }
 
-    // Valid promo вЂ” award coins
+    // Valid promo — award coins
     const reward = 5000;
     state.coins = Math.round((state.coins + reward) * 10) / 10;
     if (state.coins > state.bestScore) state.bestScore = state.coins;
@@ -877,12 +893,12 @@
     saveState();
     render();
     
-    showModal('вњ…', 'РџСЂРѕРјРѕРєРѕРґ Р°РєС‚РёРІРёСЂРѕРІР°РЅ!', 'РўС‹ РїРѕР»СѓС‡РёР» ' + formatNum(reward) + ' РјРѕРЅРµС‚! рџ’°');
+    showModal('✅', 'Промокод активирован!', 'Ты получил ' + formatNum(reward) + ' монет! 💰');
     input.value = '';
     tg?.HapticFeedback?.notificationOccurred('success');
   }
 
-  // в”Ђв”Ђ Modal в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+  // ── Modal ──────────────────────────────────────────────────────────────────
   function showModal(icon, title, text) {
     document.getElementById('modal-icon').textContent  = icon;
     document.getElementById('modal-title').textContent = title;
@@ -893,7 +909,7 @@
     document.getElementById('modal').classList.remove('show');
   }
 
-  // в”Ђв”Ђ Particles в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+  // ── Particles ──────────────────────────────────────────────────────────────
   function createParticles() {
     const container = document.getElementById('particles');
     const colors = ['#f7971e','#ffd200','#ff6b6b','#a18cd1','#fbc2eb'];
