@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Дым Клик</title>
+  <title>Р”С‹Рј РљР»РёРє</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -36,41 +36,45 @@
       100% { transform: translateY(-10vh) scale(1); opacity: 0; }
     }
 
-    /* ── Tabs ── */
+    /* в”Ђв”Ђ Tabs в”Ђв”Ђ */
     .tabs {
       position: relative;
       z-index: 2;
       display: flex;
       width: 100%;
-      max-width: 360px;
-      margin-top: 16px;
+      max-width: 420px;
+      margin-top: 12px;
       border-radius: 16px;
       background: rgba(255,255,255,0.07);
       border: 1px solid rgba(255,255,255,0.1);
-      overflow: hidden;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scrollbar-width: none;
     }
+    .tabs::-webkit-scrollbar { display: none; }
     .tab-btn {
-      flex: 1;
-      padding: 12px 0;
+      flex-shrink: 0;
+      padding: 10px 14px;
       border: none;
       background: none;
       color: rgba(255,255,255,0.5);
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       font-weight: 600;
       cursor: pointer;
       transition: background 0.2s, color 0.2s;
+      white-space: nowrap;
     }
     .tab-btn.active {
       background: linear-gradient(90deg,#f7971e,#ffd200);
       color: #1a0a00;
-      border-radius: 14px;
+      border-radius: 12px;
     }
 
-    /* ── Pages ── */
+    /* в”Ђв”Ђ Pages в”Ђв”Ђ */
     .page { display: none; width: 100%; }
     .page.active { display: block; }
 
-    /* ── Main game container ── */
+    /* в”Ђв”Ђ Main game container в”Ђв”Ђ */
     .container {
       position: relative;
       z-index: 1;
@@ -135,7 +139,7 @@
       -webkit-tap-highlight-color: transparent;
     }
     .coin-btn:active { transform: scale(0.91); box-shadow: 0 0 0 4px rgba(247,151,30,0.2), 0 0 20px rgba(247,151,30,0.3), 0 4px 16px rgba(0,0,0,0.5); }
-    .coin-btn::before { content: '💰'; font-size: 80px; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); }
+    .coin-btn::before { content: 'рџ’°'; font-size: 80px; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); }
 
     .ring {
       position: absolute; width: 180px; height: 180px; border-radius: 50%;
@@ -175,8 +179,8 @@
     .progress-bar-fill { height: 100%; background: linear-gradient(90deg,#f7971e,#ffd200); border-radius: 999px; transition: width 0.3s ease; }
     .progress-label { font-size: 0.7rem; color: rgba(255,255,255,0.4); margin-top: 5px; text-align: right; }
 
-    /* ── Cases page ── */
-    .cases-container {
+    /* в”Ђв”Ђ Generic container в”Ђв”Ђ */
+    .generic-container {
       position: relative;
       z-index: 1;
       display: flex;
@@ -187,7 +191,7 @@
       width: 100%;
       max-width: 360px;
     }
-    .cases-title {
+    .page-title {
       font-size: 1.3rem;
       font-weight: 700;
       background: linear-gradient(90deg,#f7971e,#ffd200);
@@ -195,11 +199,11 @@
       -webkit-text-fill-color: transparent;
       text-align: center;
     }
-    .cases-balance {
+    .balance-display {
       font-size: 0.9rem;
       color: rgba(255,255,255,0.6);
     }
-    .cases-balance span { color: #ffd200; font-weight: 700; }
+    .balance-display span { color: #ffd200; font-weight: 700; }
 
     .case-card {
       width: 100%;
@@ -239,7 +243,72 @@
     .case-buy-btn:disabled { opacity: 0.35; cursor: not-allowed; }
     .case-buy-btn:not(:disabled):active { transform: scale(0.97); }
 
-    /* ── Case opening animation overlay ── */
+    /* в”Ђв”Ђ Profile promo input в”Ђв”Ђ */
+    .promo-box {
+      width: 100%;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .promo-input {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.05);
+      color: #fff;
+      font-size: 1rem;
+      outline: none;
+      text-transform: uppercase;
+    }
+    .promo-input::placeholder { color: rgba(255,255,255,0.4); }
+    .promo-btn {
+      padding: 12px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 700;
+      background: linear-gradient(90deg,#f7971e,#ffd200);
+      color: #1a0a00;
+      transition: transform 0.1s;
+    }
+    .promo-btn:active { transform: scale(0.97); }
+
+    .promo-list {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .promo-item {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .promo-code { font-weight: 700; color: #ffd200; font-size: 0.95rem; letter-spacing: 1px; }
+    .promo-status { font-size: 0.75rem; color: rgba(255,255,255,0.5); }
+    .promo-status.used { color: #ff6b6b; }
+
+    /* в”Ђв”Ђ Empty state в”Ђв”Ђ */
+    .empty-state {
+      text-align: center;
+      color: rgba(255,255,255,0.5);
+      font-size: 0.9rem;
+      padding: 40px 20px;
+    }
+
+    /* в”Ђв”Ђ Case opening animation overlay в”Ђв”Ђ */
     .case-opening-overlay {
       display: none;
       position: fixed;
@@ -325,7 +394,7 @@
     .case-claim-btn.show { opacity: 1; }
     .case-claim-btn:active { transform: scale(0.95); }
 
-    /* ── Modal overlay ── */
+    /* в”Ђв”Ђ Modal overlay в”Ђв”Ђ */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -363,105 +432,142 @@
 
 <!-- Tabs -->
 <div class="tabs">
-  <button class="tab-btn active" id="tab-game" onclick="switchTab('game')">🎮 Кликер</button>
-  <button class="tab-btn"        id="tab-cases" onclick="switchTab('cases')">📦 Кейсы</button>
+  <button class="tab-btn active" id="tab-game" onclick="switchTab('game')">рџЋ® РљР»РёРєРµСЂ</button>
+  <button class="tab-btn" id="tab-cases" onclick="switchTab('cases')">рџ“¦ РљРµР№СЃС‹</button>
+  <button class="tab-btn" id="tab-shop" onclick="switchTab('shop')">рџ›’ РђСЃСЃРѕСЂС‚РёРјРµРЅС‚</button>
+  <button class="tab-btn" id="tab-cart" onclick="switchTab('cart')">рџ›Ќ РљРѕСЂР·РёРЅР°</button>
+  <button class="tab-btn" id="tab-profile" onclick="switchTab('profile')">рџ‘¤ РџСЂРѕС„РёР»СЊ</button>
 </div>
 
-<!-- ══ GAME PAGE ══ -->
+<!-- в•ђв•ђ GAME PAGE в•ђв•ђ -->
 <div class="page active" id="page-game">
   <div class="container">
     <div class="header">
-      <h1>🌿 Дым Клик</h1>
-      <p>Нажимай — зарабатывай монеты!</p>
+      <h1>рџЊї Р”С‹Рј РљР»РёРє</h1>
+      <p>РќР°Р¶РёРјР°Р№ вЂ” Р·Р°СЂР°Р±Р°С‚С‹РІР°Р№ РјРѕРЅРµС‚С‹!</p>
     </div>
 
     <div class="score-card">
-      <div class="score-label">Монеты</div>
+      <div class="score-label">РњРѕРЅРµС‚С‹</div>
       <div class="score-value" id="score">0</div>
-      <div class="score-sub">монет всего</div>
+      <div class="score-sub">РјРѕРЅРµС‚ РІСЃРµРіРѕ</div>
     </div>
 
     <div class="stats">
-      <div class="stat-box"><div class="s-label">За клик</div><div class="s-val" id="per-click">+0.1</div></div>
-      <div class="stat-box"><div class="s-label">Кликов</div><div class="s-val" id="total-clicks">0</div></div>
-      <div class="stat-box"><div class="s-label">Лучший</div><div class="s-val" id="best-score">0</div></div>
+      <div class="stat-box"><div class="s-label">Р—Р° РєР»РёРє</div><div class="s-val" id="per-click">+0.1</div></div>
+      <div class="stat-box"><div class="s-label">РљР»РёРєРѕРІ</div><div class="s-val" id="total-clicks">0</div></div>
+      <div class="stat-box"><div class="s-label">Р›СѓС‡С€РёР№</div><div class="s-val" id="best-score">0</div></div>
     </div>
 
     <div class="coin-wrapper">
-      <button class="coin-btn" id="coin" aria-label="Нажми для клика"></button>
+      <button class="coin-btn" id="coin" aria-label="РќР°Р¶РјРё РґР»СЏ РєР»РёРєР°"></button>
     </div>
 
-    <div class="level-badge"><span>⚡</span><span id="level-text">Уровень 1</span></div>
+    <div class="level-badge"><span>вљЎ</span><span id="level-text">РЈСЂРѕРІРµРЅСЊ 1</span></div>
 
     <div class="progress-wrap">
       <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-fill" style="width:0%"></div></div>
-      <div class="progress-label" id="progress-label">0 / 50 до улучшения</div>
+      <div class="progress-label" id="progress-label">0 / 50 РґРѕ СѓР»СѓС‡С€РµРЅРёСЏ</div>
     </div>
 
     <button class="upgrade-btn" id="upgrade-btn" disabled>
-      🚀 Улучшить клик — <span id="upgrade-cost">50</span> монет
+      рџљЂ РЈР»СѓС‡С€РёС‚СЊ РєР»РёРє вЂ” <span id="upgrade-cost">50</span> РјРѕРЅРµС‚
     </button>
   </div>
 </div>
 
-<!-- ══ CASES PAGE ══ -->
+<!-- в•ђв•ђ CASES PAGE в•ђв•ђ -->
 <div class="page" id="page-cases">
-  <div class="cases-container">
-    <div class="cases-title">📦 Магазин кейсов</div>
-    <div class="cases-balance">Баланс: <span id="cases-balance">0</span> монет</div>
+  <div class="generic-container">
+    <div class="page-title">рџ“¦ РњР°РіР°Р·РёРЅ РєРµР№СЃРѕРІ</div>
+    <div class="balance-display">Р‘Р°Р»Р°РЅСЃ: <span id="cases-balance">0</span> РјРѕРЅРµС‚</div>
 
-    <!-- Case 1 -->
     <div class="case-card">
-      <div class="case-icon">🟢</div>
-      <div class="case-name">Лёгкий кейс</div>
-      <div class="case-desc">Небольшая награда — хороший старт для новичка</div>
-      <div class="case-reward">Награда: 3 изображения</div>
+      <div class="case-icon">рџџў</div>
+      <div class="case-name">Р›С‘РіРєРёР№ РєРµР№СЃ</div>
+      <div class="case-desc">РќРµР±РѕР»СЊС€Р°СЏ РЅР°РіСЂР°РґР° вЂ” С…РѕСЂРѕС€РёР№ СЃС‚Р°СЂС‚ РґР»СЏ РЅРѕРІРёС‡РєР°</div>
+      <div class="case-reward">РќР°РіСЂР°РґР°: РёР·РѕР±СЂР°Р¶РµРЅРёРµ + РїСЂРѕРјРѕРєРѕРґ</div>
       <button class="case-buy-btn tier1" id="case-btn-1" onclick="buyCase(1)">
-        🛒 Купить за 1 000 монет
+        рџ›’ РљСѓРїРёС‚СЊ Р·Р° 1 000 РјРѕРЅРµС‚
       </button>
     </div>
 
-    <!-- Case 2 -->
     <div class="case-card">
-      <div class="case-icon">🔵</div>
-      <div class="case-name">Средний кейс</div>
-      <div class="case-desc">Увеличенные шансы на крутую награду</div>
-      <div class="case-reward">Награда: 1 000–4 000 монет</div>
+      <div class="case-icon">рџ”µ</div>
+      <div class="case-name">РЎСЂРµРґРЅРёР№ РєРµР№СЃ</div>
+      <div class="case-desc">РЈРІРµР»РёС‡РµРЅРЅС‹Рµ С€Р°РЅСЃС‹ РЅР° РєСЂСѓС‚СѓСЋ РЅР°РіСЂР°РґСѓ</div>
+      <div class="case-reward">РќР°РіСЂР°РґР°: 1 000вЂ“4 000 РјРѕРЅРµС‚</div>
       <button class="case-buy-btn tier2" id="case-btn-2" onclick="buyCase(2)">
-        🛒 Купить за 2 000 монет
+        рџ›’ РљСѓРїРёС‚СЊ Р·Р° 2 000 РјРѕРЅРµС‚
       </button>
     </div>
 
-    <!-- Case 3 -->
     <div class="case-card">
-      <div class="case-icon">🟡</div>
-      <div class="case-name">Золотой кейс</div>
-      <div class="case-desc">Топовые награды — только для настоящих кликеров</div>
-      <div class="case-reward">Награда: 2 500–10 000 монет</div>
+      <div class="case-icon">рџџЎ</div>
+      <div class="case-name">Р—РѕР»РѕС‚РѕР№ РєРµР№СЃ</div>
+      <div class="case-desc">РўРѕРїРѕРІС‹Рµ РЅР°РіСЂР°РґС‹ вЂ” С‚РѕР»СЊРєРѕ РґР»СЏ РЅР°СЃС‚РѕСЏС‰РёС… РєР»РёРєРµСЂРѕРІ</div>
+      <div class="case-reward">РќР°РіСЂР°РґР°: 2 500вЂ“10 000 РјРѕРЅРµС‚</div>
       <button class="case-buy-btn tier3" id="case-btn-3" onclick="buyCase(3)">
-        🛒 Купить за 3 000 монет
+        рџ›’ РљСѓРїРёС‚СЊ Р·Р° 3 000 РјРѕРЅРµС‚
       </button>
     </div>
   </div>
 </div>
 
-<!-- ══ CASE OPENING ANIMATION ══ -->
+<!-- в•ђв•ђ SHOP PAGE в•ђв•ђ -->
+<div class="page" id="page-shop">
+  <div class="generic-container">
+    <div class="page-title">рџ›’ РђСЃСЃРѕСЂС‚РёРјРµРЅС‚</div>
+    <div class="empty-state">РЎРєРѕСЂРѕ Р·РґРµСЃСЊ РїРѕСЏРІСЏС‚СЃСЏ С‚РѕРІР°СЂС‹ РґР»СЏ РїРѕРєСѓРїРєРё</div>
+  </div>
+</div>
+
+<!-- в•ђв•ђ CART PAGE в•ђв•ђ -->
+<div class="page" id="page-cart">
+  <div class="generic-container">
+    <div class="page-title">рџ›Ќ РљРѕСЂР·РёРЅР°</div>
+    <div class="empty-state">Р’Р°С€Р° РєРѕСЂР·РёРЅР° РїСѓСЃС‚Р°</div>
+  </div>
+</div>
+
+<!-- в•ђв•ђ PROFILE PAGE в•ђв•ђ -->
+<div class="page" id="page-profile">
+  <div class="generic-container">
+    <div class="page-title">рџ‘¤ РџСЂРѕС„РёР»СЊ</div>
+    <div class="balance-display">Р‘Р°Р»Р°РЅСЃ: <span id="profile-balance">0</span> РјРѕРЅРµС‚</div>
+
+    <div class="promo-box">
+      <div class="case-name">рџЋЃ РђРєС‚РёРІРёСЂРѕРІР°С‚СЊ РїСЂРѕРјРѕРєРѕРґ</div>
+      <input type="text" class="promo-input" id="promo-input" placeholder="Р’РІРµРґРё РїСЂРѕРјРѕРєРѕРґ" maxlength="20" />
+      <button class="promo-btn" onclick="activatePromo()">РђРєС‚РёРІРёСЂРѕРІР°С‚СЊ</button>
+    </div>
+
+    <div class="promo-box">
+      <div class="case-name">рџ“њ РњРѕРё РїСЂРѕРјРѕРєРѕРґС‹</div>
+      <div class="promo-list" id="promo-list">
+        <div class="empty-state">РЈ С‚РµР±СЏ РїРѕРєР° РЅРµС‚ РїСЂРѕРјРѕРєРѕРґРѕРІ</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- в•ђв•ђ CASE OPENING ANIMATION в•ђв•ђ -->
 <div class="case-opening-overlay" id="case-anim-overlay">
   <div class="case-anim-box">
     <div class="case-items-strip" id="case-items-strip"></div>
     <div class="case-selector"></div>
   </div>
   <div class="case-result-text" id="case-result-text"></div>
-  <button class="case-claim-btn" id="case-claim-btn" onclick="claimCaseReward()">Забрать</button>
+  <button class="case-claim-btn" id="case-claim-btn" onclick="claimCaseReward()">Р—Р°Р±СЂР°С‚СЊ</button>
 </div>
 
-<!-- ══ MODAL ══ -->
+<!-- в•ђв•ђ MODAL в•ђв•ђ -->
 <div class="modal-overlay" id="modal">
   <div class="modal-box">
-    <div class="modal-icon" id="modal-icon">🎉</div>
-    <div class="modal-title" id="modal-title">Поздравляем!</div>
-    <div class="modal-text"  id="modal-text">Вы открыли кейс</div>
-    <button class="modal-close" onclick="closeModal()">Закрыть</button>
+    <div class="modal-icon" id="modal-icon">рџЋ‰</div>
+    <div class="modal-title" id="modal-title">РџРѕР·РґСЂР°РІР»СЏРµРј!</div>
+    <div class="modal-text"  id="modal-text">Р’С‹ РѕС‚РєСЂС‹Р»Рё РєРµР№СЃ</div>
+    <button class="modal-close" onclick="closeModal()">Р—Р°РєСЂС‹С‚СЊ</button>
   </div>
 </div>
 
@@ -469,11 +575,19 @@
   const tg = window.Telegram?.WebApp;
   if (tg) { tg.ready(); tg.expand(); }
 
-  // ── State ──────────────────────────────────────────────────────────────────
+  // в”Ђв”Ђ State в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
   const STORAGE_KEY = 'dym_clicker_v3';
 
   function defaultState() {
-    return { coins: 200000, totalClicks: 0, perClick: 0.1, level: 1, bestScore: 200000 };
+    return { 
+      coins: 200000, 
+      totalClicks: 0, 
+      perClick: 0.1, 
+      level: 1, 
+      bestScore: 200000,
+      promoCodes: [],      // { code: 'ABC123', used: false }
+      usedPromoCodes: []   // ['ABC123', ...]
+    };
   }
   function loadState() {
     try {
@@ -485,28 +599,29 @@
 
   let state = loadState();
 
-  // ── Cases config ───────────────────────────────────────────────────────────
+  // в”Ђв”Ђ Cases config в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
   const CASES = {
-    1: { cost: 1000, items: ['1000-1.jpg','1000-2.jpg','1000-3.jpg'], icon: '🟢', name: 'Лёгкий кейс' },
-    2: { cost: 2000, min: 1000, max: 4000,  icon: '🔵', name: 'Средний кейс' },
-    3: { cost: 3000, min: 2500, max: 10000, icon: '🟡', name: 'Золотой кейс' },
+    1: { cost: 1000, items: ['1000-1.jpg','1000-2.jpg','1000-3.jpg'], icon: 'рџџў', name: 'Р›С‘РіРєРёР№ РєРµР№СЃ', hasPromo: true },
+    2: { cost: 2000, min: 1000, max: 4000,  icon: 'рџ”µ', name: 'РЎСЂРµРґРЅРёР№ РєРµР№СЃ' },
+    3: { cost: 3000, min: 2500, max: 10000, icon: 'рџџЎ', name: 'Р—РѕР»РѕС‚РѕР№ РєРµР№СЃ' },
   };
 
   let currentCaseReward = null;
 
-  // ── Tab switch ─────────────────────────────────────────────────────────────
+  // в”Ђв”Ђ Tab switch в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
   function switchTab(tab) {
-    document.getElementById('page-game').classList.toggle('active',  tab === 'game');
-    document.getElementById('page-cases').classList.toggle('active', tab === 'cases');
-    document.getElementById('tab-game').classList.toggle('active',   tab === 'game');
-    document.getElementById('tab-cases').classList.toggle('active',  tab === 'cases');
+    ['game','cases','shop','cart','profile'].forEach(t => {
+      document.getElementById('page-' + t).classList.toggle('active', t === tab);
+      document.getElementById('tab-' + t).classList.toggle('active', t === tab);
+    });
     if (tab === 'cases') renderCases();
+    if (tab === 'profile') renderProfile();
   }
 
-  // ── Upgrade config ─────────────────────────────────────────────────────────
+  // в”Ђв”Ђ Upgrade config в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
   function upgradeCost(level) { return Math.floor(50 * Math.pow(2.2, level - 1)); }
 
-  // ── DOM refs ───────────────────────────────────────────────────────────────
+  // в”Ђв”Ђ DOM refs в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
   const scoreEl       = document.getElementById('score');
   const perClickEl    = document.getElementById('per-click');
   const totalClickEl  = document.getElementById('total-clicks');
@@ -518,23 +633,23 @@
   const upgradeCostEl = document.getElementById('upgrade-cost');
   const coinBtn       = document.getElementById('coin');
 
-  // ── Render game ────────────────────────────────────────────────────────────
+  // в”Ђв”Ђ Render game в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
   function render() {
     scoreEl.textContent      = formatNum(state.coins);
     perClickEl.textContent   = '+' + state.perClick.toFixed(1);
     totalClickEl.textContent = formatNum(state.totalClicks);
     bestEl.textContent       = formatNum(state.bestScore);
-    levelEl.textContent      = 'Уровень ' + state.level;
+    levelEl.textContent      = 'РЈСЂРѕРІРµРЅСЊ ' + state.level;
 
     const cost = upgradeCost(state.level);
     const pct  = Math.min(100, Math.floor((state.coins / cost) * 100));
     progressFill.style.width  = pct + '%';
-    progressLbl.textContent   = formatNum(state.coins) + ' / ' + formatNum(cost) + ' до улучшения';
+    progressLbl.textContent   = formatNum(state.coins) + ' / ' + formatNum(cost) + ' РґРѕ СѓР»СѓС‡С€РµРЅРёСЏ';
     upgradeCostEl.textContent = formatNum(cost);
     upgradeBtn.disabled       = state.coins < cost;
   }
 
-  // ── Render cases ───────────────────────────────────────────────────────────
+  // в”Ђв”Ђ Render cases в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
   function renderCases() {
     document.getElementById('cases-balance').textContent = formatNum(state.coins);
     for (const id of [1, 2, 3]) {
@@ -543,13 +658,35 @@
     }
   }
 
+  // в”Ђв”Ђ Render profile в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+  function renderProfile() {
+    document.getElementById('profile-balance').textContent = formatNum(state.coins);
+    const list = document.getElementById('promo-list');
+    list.innerHTML = '';
+
+    if (!state.promoCodes || state.promoCodes.length === 0) {
+      list.innerHTML = '<div class="empty-state">РЈ С‚РµР±СЏ РїРѕРєР° РЅРµС‚ РїСЂРѕРјРѕРєРѕРґРѕРІ</div>';
+      return;
+    }
+
+    state.promoCodes.forEach(p => {
+      const div = document.createElement('div');
+      div.className = 'promo-item';
+      div.innerHTML = `
+        <span class="promo-code">${p.code}</span>
+        <span class="promo-status ${p.used ? 'used' : ''}">${p.used ? 'РСЃРїРѕР»СЊР·РѕРІР°РЅ' : 'РђРєС‚РёРІРЅС‹Р№'}</span>
+      `;
+      list.appendChild(div);
+    });
+  }
+
   function formatNum(n) {
     if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + 'M';
     if (n >= 1_000)     return (n / 1_000).toFixed(1) + 'K';
     return Number.isInteger(n) ? String(n) : n.toFixed(1);
   }
 
-  // ── Click handler ──────────────────────────────────────────────────────────
+  // в”Ђв”Ђ Click handler в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
   coinBtn.addEventListener('click', (e) => {
     if (coinBtn._touchFired) { coinBtn._touchFired = false; return; }
     doClick(e.clientX, e.clientY);
@@ -595,7 +732,7 @@
     ring.addEventListener('animationend', () => ring.remove());
   }
 
-  // ── Upgrade handler ────────────────────────────────────────────────────────
+  // в”Ђв”Ђ Upgrade handler в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
   upgradeBtn.addEventListener('click', () => {
     const cost = upgradeCost(state.level);
     if (state.coins < cost) return;
@@ -607,7 +744,7 @@
     render();
   });
 
-  // ── Case handler ───────────────────────────────────────────────────────────
+  // в”Ђв”Ђ Case handler в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
   function buyCase(id) {
     const c = CASES[id];
     if (state.coins < c.cost) return;
@@ -618,10 +755,8 @@
     renderCases();
 
     if (id === 1) {
-      // Case with images — show animation
       openCaseAnimation(c);
     } else {
-      // Cases 2 & 3 — coins reward
       const reward = Math.floor(Math.random() * (c.max - c.min + 1)) + c.min;
       state.coins  = Math.round((state.coins + reward) * 10) / 10;
       if (state.coins > state.bestScore) state.bestScore = state.coins;
@@ -629,18 +764,17 @@
       saveState();
       render();
       renderCases();
-      showModal(c.icon, c.name, 'Ты выиграл ' + formatNum(reward) + ' монет! 🎉\nМонеты зачислены на счёт.');
+      showModal(c.icon, c.name, 'РўС‹ РІС‹РёРіСЂР°Р» ' + formatNum(reward) + ' РјРѕРЅРµС‚! рџЋ‰\nРњРѕРЅРµС‚С‹ Р·Р°С‡РёСЃР»РµРЅС‹ РЅР° СЃС‡С‘С‚.');
     }
   }
 
-  // ── Case opening animation ─────────────────────────────────────────────────
+  // в”Ђв”Ђ Case opening animation в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
   function openCaseAnimation(c) {
     const overlay = document.getElementById('case-anim-overlay');
     const strip   = document.getElementById('case-items-strip');
     const resultText = document.getElementById('case-result-text');
     const claimBtn   = document.getElementById('case-claim-btn');
 
-    // Reset
     strip.innerHTML = '';
     strip.style.transition = 'none';
     strip.style.left = '0px';
@@ -648,10 +782,9 @@
     resultText.classList.remove('show');
     claimBtn.classList.remove('show');
 
-    // Build strip (30 items, repeating pattern)
     const items = c.items;
     const total = 30;
-    const winIndex = 15; // Middle item wins
+    const winIndex = 15;
 
     for (let i = 0; i < total; i++) {
       const div = document.createElement('div');
@@ -665,21 +798,25 @@
     overlay.classList.add('show');
     tg?.HapticFeedback?.impactOccurred('medium');
 
-    // Start animation after frame
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        const itemWidth = 120; // 100px + 20px margin
-        const offset = -(winIndex * itemWidth) + 100; // Center on selector (300/2 - 50)
+        const itemWidth = 120;
+        const offset = -(winIndex * itemWidth) + 100;
         strip.style.transition = 'left 3s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
         strip.style.left = offset + 'px';
       });
     });
 
-    // After animation completes
     setTimeout(() => {
       const wonImage = items[winIndex % items.length];
-      currentCaseReward = wonImage;
-      resultText.textContent = '🎉 Вы получили изображение!';
+      const promoCode = generatePromoCode();
+      
+      state.promoCodes = state.promoCodes || [];
+      state.promoCodes.push({ code: promoCode, used: false });
+      saveState();
+
+      currentCaseReward = { image: wonImage, promo: promoCode };
+      resultText.textContent = 'рџЋ‰ РР·РѕР±СЂР°Р¶РµРЅРёРµ + РџСЂРѕРјРѕРєРѕРґ!';
       resultText.classList.add('show');
       claimBtn.classList.add('show');
       tg?.HapticFeedback?.notificationOccurred('success');
@@ -691,12 +828,61 @@
     overlay.classList.remove('show');
     
     if (currentCaseReward) {
-      showModal('🖼', 'Награда получена', 'Изображение сохранено:\n' + currentCaseReward);
+      showModal('рџЋЃ', 'РќР°РіСЂР°РґР° РїРѕР»СѓС‡РµРЅР°', 
+        'РР·РѕР±СЂР°Р¶РµРЅРёРµ: ' + currentCaseReward.image + '\n\nРџСЂРѕРјРѕРєРѕРґ: ' + currentCaseReward.promo + '\n\nРџСЂРѕРјРѕРєРѕРґ СЃРѕС…СЂР°РЅС‘РЅ РІ РїСЂРѕС„РёР»Рµ!');
       currentCaseReward = null;
     }
   }
 
-  // ── Modal ──────────────────────────────────────────────────────────────────
+  // в”Ђв”Ђ Promo code logic в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
+  function generatePromoCode() {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let code = '';
+    for (let i = 0; i < 8; i++) {
+      code += chars[Math.floor(Math.random() * chars.length)];
+    }
+    return code;
+  }
+
+  function activatePromo() {
+    const input = document.getElementById('promo-input');
+    const code = input.value.trim().toUpperCase();
+    
+    if (!code) {
+      showModal('вљ пёЏ', 'РћС€РёР±РєР°', 'Р’РІРµРґРё РїСЂРѕРјРѕРєРѕРґ');
+      return;
+    }
+
+    state.usedPromoCodes = state.usedPromoCodes || [];
+    
+    if (state.usedPromoCodes.includes(code)) {
+      showModal('вќЊ', 'РћС€РёР±РєР°', 'Р­С‚РѕС‚ РїСЂРѕРјРѕРєРѕРґ СѓР¶Рµ РёСЃРїРѕР»СЊР·РѕРІР°РЅ');
+      input.value = '';
+      return;
+    }
+
+    const existingPromo = state.promoCodes?.find(p => p.code === code && !p.used);
+    
+    if (existingPromo) {
+      showModal('вќЊ', 'РћС€РёР±РєР°', 'РќРµР»СЊР·СЏ Р°РєС‚РёРІРёСЂРѕРІР°С‚СЊ СЃРІРѕР№ РїСЂРѕРјРѕРєРѕРґ');
+      input.value = '';
+      return;
+    }
+
+    // Valid promo вЂ” award coins
+    const reward = 5000;
+    state.coins = Math.round((state.coins + reward) * 10) / 10;
+    if (state.coins > state.bestScore) state.bestScore = state.coins;
+    state.usedPromoCodes.push(code);
+    saveState();
+    render();
+    
+    showModal('вњ…', 'РџСЂРѕРјРѕРєРѕРґ Р°РєС‚РёРІРёСЂРѕРІР°РЅ!', 'РўС‹ РїРѕР»СѓС‡РёР» ' + formatNum(reward) + ' РјРѕРЅРµС‚! рџ’°');
+    input.value = '';
+    tg?.HapticFeedback?.notificationOccurred('success');
+  }
+
+  // в”Ђв”Ђ Modal в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
   function showModal(icon, title, text) {
     document.getElementById('modal-icon').textContent  = icon;
     document.getElementById('modal-title').textContent = title;
@@ -707,7 +893,7 @@
     document.getElementById('modal').classList.remove('show');
   }
 
-  // ── Particles ──────────────────────────────────────────────────────────────
+  // в”Ђв”Ђ Particles в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
   function createParticles() {
     const container = document.getElementById('particles');
     const colors = ['#f7971e','#ffd200','#ff6b6b','#a18cd1','#fbc2eb'];
