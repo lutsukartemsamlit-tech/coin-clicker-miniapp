@@ -6,11 +6,7 @@
   <title>Дым Клик</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: 'Segoe UI', system-ui, sans-serif;
@@ -19,34 +15,20 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
       color: #fff;
-      overflow: hidden;
+      overflow-x: hidden;
       user-select: none;
     }
-
     body::before {
       content: '';
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.45);
+      background: rgba(0,0,0,0.45);
       z-index: 0;
     }
 
-    /* Floating particles background */
-    .particles {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-    }
-    .particle {
-      position: absolute;
-      border-radius: 50%;
-      opacity: 0.15;
-      animation: float linear infinite;
-    }
-
+    .particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+    .particle  { position: absolute; border-radius: 50%; opacity: 0.15; animation: float linear infinite; }
     @keyframes float {
       0%   { transform: translateY(100vh) scale(0); opacity: 0; }
       10%  { opacity: 0.15; }
@@ -54,37 +36,64 @@
       100% { transform: translateY(-10vh) scale(1); opacity: 0; }
     }
 
+    /* ── Tabs ── */
+    .tabs {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      width: 100%;
+      max-width: 360px;
+      margin-top: 16px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.1);
+      overflow: hidden;
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 12px 0;
+      border: none;
+      background: none;
+      color: rgba(255,255,255,0.5);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    .tab-btn.active {
+      background: linear-gradient(90deg,#f7971e,#ffd200);
+      color: #1a0a00;
+      border-radius: 14px;
+    }
+
+    /* ── Pages ── */
+    .page { display: none; width: 100%; }
+    .page.active { display: block; }
+
+    /* ── Main game container ── */
     .container {
       position: relative;
       z-index: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 20px;
-      padding: 24px 16px;
+      gap: 16px;
+      padding: 16px 16px 32px;
       width: 100%;
       max-width: 360px;
     }
 
-    /* Header */
-    .header {
-      text-align: center;
-    }
+    .header { text-align: center; }
     .header h1 {
       font-size: 1.6rem;
       font-weight: 700;
       letter-spacing: 1px;
-      background: linear-gradient(90deg, #f7971e, #ffd200);
+      background: linear-gradient(90deg,#f7971e,#ffd200);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-    .header p {
-      font-size: 0.85rem;
-      color: rgba(255,255,255,0.5);
-      margin-top: 4px;
-    }
+    .header p { font-size: 0.85rem; color: rgba(255,255,255,0.5); margin-top: 4px; }
 
-    /* Score card */
     .score-card {
       background: rgba(255,255,255,0.07);
       border: 1px solid rgba(255,255,255,0.12);
@@ -94,36 +103,17 @@
       text-align: center;
       width: 100%;
     }
-    .score-label {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      color: rgba(255,255,255,0.45);
-    }
+    .score-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.45); }
     .score-value {
-      font-size: 3rem;
-      font-weight: 800;
-      line-height: 1.1;
-      background: linear-gradient(90deg, #f7971e, #ffd200);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      font-size: 3rem; font-weight: 800; line-height: 1.1;
+      background: linear-gradient(90deg,#f7971e,#ffd200);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
       transition: transform 0.1s;
     }
-    .score-value.bump {
-      transform: scale(1.12);
-    }
-    .score-sub {
-      font-size: 0.78rem;
-      color: rgba(255,255,255,0.4);
-      margin-top: 4px;
-    }
+    .score-value.bump { transform: scale(1.12); }
+    .score-sub { font-size: 0.78rem; color: rgba(255,255,255,0.4); margin-top: 4px; }
 
-    /* Stats row */
-    .stats {
-      display: flex;
-      gap: 12px;
-      width: 100%;
-    }
+    .stats { display: flex; gap: 12px; width: 100%; }
     .stat-box {
       flex: 1;
       background: rgba(255,255,255,0.06);
@@ -132,87 +122,32 @@
       padding: 12px 8px;
       text-align: center;
     }
-    .stat-box .s-label {
-      font-size: 0.65rem;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      color: rgba(255,255,255,0.4);
-    }
-    .stat-box .s-val {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #ffd200;
-      margin-top: 2px;
-    }
+    .stat-box .s-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.4); }
+    .stat-box .s-val   { font-size: 1.1rem; font-weight: 700; color: #ffd200; margin-top: 2px; }
 
-    /* Coin button */
-    .coin-wrapper {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
+    .coin-wrapper { position: relative; display: flex; align-items: center; justify-content: center; }
     .coin-btn {
-      width: 180px;
-      height: 180px;
-      border-radius: 50%;
-      border: none;
-      cursor: pointer;
-      outline: none;
+      width: 180px; height: 180px; border-radius: 50%; border: none; cursor: pointer; outline: none;
       position: relative;
       background: radial-gradient(circle at 35% 35%, #ffe259, #f7971e 60%, #c0620a);
-      box-shadow:
-        0 0 0 6px rgba(247,151,30,0.25),
-        0 0 40px rgba(247,151,30,0.4),
-        0 8px 32px rgba(0,0,0,0.5);
+      box-shadow: 0 0 0 6px rgba(247,151,30,0.25), 0 0 40px rgba(247,151,30,0.4), 0 8px 32px rgba(0,0,0,0.5);
       transition: transform 0.08s, box-shadow 0.08s;
       -webkit-tap-highlight-color: transparent;
     }
+    .coin-btn:active { transform: scale(0.91); box-shadow: 0 0 0 4px rgba(247,151,30,0.2), 0 0 20px rgba(247,151,30,0.3), 0 4px 16px rgba(0,0,0,0.5); }
+    .coin-btn::before { content: '💰'; font-size: 80px; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); }
 
-    .coin-btn:active,
-    .coin-btn.pressed {
-      transform: scale(0.91);
-      box-shadow:
-        0 0 0 4px rgba(247,151,30,0.2),
-        0 0 20px rgba(247,151,30,0.3),
-        0 4px 16px rgba(0,0,0,0.5);
-    }
-
-    .coin-btn::before {
-      content: '💰';
-      font-size: 80px;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-
-    /* Ripple ring */
     .ring {
-      position: absolute;
-      width: 180px;
-      height: 180px;
-      border-radius: 50%;
+      position: absolute; width: 180px; height: 180px; border-radius: 50%;
       border: 3px solid rgba(247,151,30,0.6);
-      animation: ring-out 0.5s ease-out forwards;
-      pointer-events: none;
+      animation: ring-out 0.5s ease-out forwards; pointer-events: none;
     }
-    @keyframes ring-out {
-      0%   { transform: scale(1); opacity: 0.8; }
-      100% { transform: scale(1.9); opacity: 0; }
-    }
+    @keyframes ring-out { 0% { transform: scale(1); opacity: 0.8; } 100% { transform: scale(1.9); opacity: 0; } }
 
-    /* Floating +1 labels */
     .float-label {
-      position: fixed;
-      font-size: 1.5rem;
-      font-weight: 800;
-      color: #ffd200;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.6);
-      pointer-events: none;
-      animation: fly-up 0.9s ease-out forwards;
-      z-index: 999;
+      position: fixed; font-size: 1.5rem; font-weight: 800; color: #ffd200;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.6); pointer-events: none;
+      animation: fly-up 0.9s ease-out forwards; z-index: 999;
     }
     @keyframes fly-up {
       0%   { opacity: 1; transform: translateY(0) scale(1); }
@@ -220,66 +155,119 @@
       100% { opacity: 0; transform: translateY(-90px) scale(0.7); }
     }
 
-    /* Upgrade button */
     .upgrade-btn {
+      width: 100%; padding: 14px; border-radius: 16px; border: none; cursor: pointer;
+      font-size: 1rem; font-weight: 700; letter-spacing: 0.5px;
+      background: linear-gradient(90deg,#f7971e,#ffd200); color: #1a0a00;
+      box-shadow: 0 4px 20px rgba(247,151,30,0.4); transition: transform 0.1s, opacity 0.2s;
+    }
+    .upgrade-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+    .upgrade-btn:not(:disabled):active { transform: scale(0.97); }
+
+    .level-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(255,210,0,0.15); border: 1px solid rgba(255,210,0,0.35);
+      border-radius: 999px; padding: 6px 16px; font-size: 0.85rem; font-weight: 600; color: #ffd200;
+    }
+
+    .progress-wrap { width: 100%; }
+    .progress-bar-bg { width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 999px; overflow: hidden; }
+    .progress-bar-fill { height: 100%; background: linear-gradient(90deg,#f7971e,#ffd200); border-radius: 999px; transition: width 0.3s ease; }
+    .progress-label { font-size: 0.7rem; color: rgba(255,255,255,0.4); margin-top: 5px; text-align: right; }
+
+    /* ── Cases page ── */
+    .cases-container {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 16px 32px;
       width: 100%;
-      padding: 14px;
-      border-radius: 16px;
+      max-width: 360px;
+    }
+    .cases-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      background: linear-gradient(90deg,#f7971e,#ffd200);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-align: center;
+    }
+    .cases-balance {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.6);
+    }
+    .cases-balance span { color: #ffd200; font-weight: 700; }
+
+    .case-card {
+      width: 100%;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    .case-icon { font-size: 3.5rem; line-height: 1; }
+    .case-name { font-size: 1.1rem; font-weight: 700; color: #fff; }
+    .case-desc { font-size: 0.8rem; color: rgba(255,255,255,0.5); text-align: center; line-height: 1.4; }
+    .case-reward {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.7);
+      background: rgba(255,255,255,0.08);
+      border-radius: 999px;
+      padding: 4px 14px;
+    }
+    .case-buy-btn {
+      width: 100%;
+      padding: 12px;
+      border-radius: 14px;
       border: none;
       cursor: pointer;
-      font-size: 1rem;
+      font-size: 0.95rem;
       font-weight: 700;
-      letter-spacing: 0.5px;
-      background: linear-gradient(90deg, #f7971e, #ffd200);
-      color: #1a0a00;
-      box-shadow: 0 4px 20px rgba(247,151,30,0.4);
       transition: transform 0.1s, opacity 0.2s;
     }
-    .upgrade-btn:disabled {
-      opacity: 0.35;
-      cursor: not-allowed;
-      transform: none !important;
-    }
-    .upgrade-btn:not(:disabled):active {
-      transform: scale(0.97);
-    }
+    .case-buy-btn.tier1 { background: linear-gradient(90deg,#56ab2f,#a8e063); color: #0a1f00; box-shadow: 0 4px 16px rgba(86,171,47,0.4); }
+    .case-buy-btn.tier2 { background: linear-gradient(90deg,#4776e6,#8e54e9); color: #fff;    box-shadow: 0 4px 16px rgba(142,84,233,0.4); }
+    .case-buy-btn.tier3 { background: linear-gradient(90deg,#f7971e,#ffd200); color: #1a0a00; box-shadow: 0 4px 16px rgba(247,151,30,0.4); }
+    .case-buy-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+    .case-buy-btn:not(:disabled):active { transform: scale(0.97); }
 
-    /* Level badge */
-    .level-badge {
-      display: inline-flex;
+    /* ── Modal overlay ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      z-index: 100;
       align-items: center;
-      gap: 6px;
-      background: rgba(255,210,0,0.15);
-      border: 1px solid rgba(255,210,0,0.35);
-      border-radius: 999px;
-      padding: 6px 16px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: #ffd200;
+      justify-content: center;
     }
-
-    /* Progress bar */
-    .progress-wrap {
-      width: 100%;
+    .modal-overlay.show { display: flex; }
+    .modal-box {
+      background: #1a1030;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 24px;
+      padding: 32px 24px;
+      text-align: center;
+      max-width: 300px;
+      width: 90%;
+      animation: pop-in 0.3s cubic-bezier(0.34,1.56,0.64,1);
     }
-    .progress-bar-bg {
-      width: 100%;
-      height: 8px;
-      background: rgba(255,255,255,0.1);
-      border-radius: 999px;
-      overflow: hidden;
-    }
-    .progress-bar-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #f7971e, #ffd200);
-      border-radius: 999px;
-      transition: width 0.3s ease;
-    }
-    .progress-label {
-      font-size: 0.7rem;
-      color: rgba(255,255,255,0.4);
-      margin-top: 5px;
-      text-align: right;
+    @keyframes pop-in { from { transform: scale(0.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .modal-icon   { font-size: 4rem; line-height: 1; margin-bottom: 12px; }
+    .modal-title  { font-size: 1.3rem; font-weight: 800; color: #ffd200; margin-bottom: 8px; }
+    .modal-text   { font-size: 0.95rem; color: rgba(255,255,255,0.75); line-height: 1.5; margin-bottom: 20px; }
+    .modal-close  {
+      padding: 12px 32px; border-radius: 14px; border: none; cursor: pointer;
+      background: linear-gradient(90deg,#f7971e,#ffd200); color: #1a0a00;
+      font-size: 1rem; font-weight: 700;
     }
   </style>
 </head>
@@ -287,100 +275,152 @@
 
 <div class="particles" id="particles"></div>
 
-<div class="container">
-  <div class="header">
-    <h1>🌿 Дым Клик</h1>
-    <p>Нажимай — зарабатывай монеты!</p>
-  </div>
+<!-- Tabs -->
+<div class="tabs">
+  <button class="tab-btn active" id="tab-game" onclick="switchTab('game')">🎮 Кликер</button>
+  <button class="tab-btn"        id="tab-cases" onclick="switchTab('cases')">📦 Кейсы</button>
+</div>
 
-  <div class="score-card">
-    <div class="score-label">Монеты</div>
-    <div class="score-value" id="score">0</div>
-    <div class="score-sub">монет всего</div>
-  </div>
-
-  <div class="stats">
-    <div class="stat-box">
-      <div class="s-label">За клик</div>
-      <div class="s-val" id="per-click">+0.1</div>
+<!-- ══ GAME PAGE ══ -->
+<div class="page active" id="page-game">
+  <div class="container">
+    <div class="header">
+      <h1>🌿 Дым Клик</h1>
+      <p>Нажимай — зарабатывай монеты!</p>
     </div>
-    <div class="stat-box">
-      <div class="s-label">Кликов</div>
-      <div class="s-val" id="total-clicks">0</div>
+
+    <div class="score-card">
+      <div class="score-label">Монеты</div>
+      <div class="score-value" id="score">0</div>
+      <div class="score-sub">монет всего</div>
     </div>
-    <div class="stat-box">
-      <div class="s-label">Лучший</div>
-      <div class="s-val" id="best-score">0</div>
+
+    <div class="stats">
+      <div class="stat-box"><div class="s-label">За клик</div><div class="s-val" id="per-click">+0.1</div></div>
+      <div class="stat-box"><div class="s-label">Кликов</div><div class="s-val" id="total-clicks">0</div></div>
+      <div class="stat-box"><div class="s-label">Лучший</div><div class="s-val" id="best-score">0</div></div>
+    </div>
+
+    <div class="coin-wrapper">
+      <button class="coin-btn" id="coin" aria-label="Нажми для клика"></button>
+    </div>
+
+    <div class="level-badge"><span>⚡</span><span id="level-text">Уровень 1</span></div>
+
+    <div class="progress-wrap">
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-fill" style="width:0%"></div></div>
+      <div class="progress-label" id="progress-label">0 / 50 до улучшения</div>
+    </div>
+
+    <button class="upgrade-btn" id="upgrade-btn" disabled>
+      🚀 Улучшить клик — <span id="upgrade-cost">50</span> монет
+    </button>
+  </div>
+</div>
+
+<!-- ══ CASES PAGE ══ -->
+<div class="page" id="page-cases">
+  <div class="cases-container">
+    <div class="cases-title">📦 Магазин кейсов</div>
+    <div class="cases-balance">Баланс: <span id="cases-balance">0</span> монет</div>
+
+    <!-- Case 1 -->
+    <div class="case-card">
+      <div class="case-icon">🟢</div>
+      <div class="case-name">Лёгкий кейс</div>
+      <div class="case-desc">Небольшая награда — хороший старт для новичка</div>
+      <div class="case-reward">Награда: 500–1 500 монет</div>
+      <button class="case-buy-btn tier1" id="case-btn-1" onclick="buyCase(1)">
+        🛒 Купить за 1 000 монет
+      </button>
+    </div>
+
+    <!-- Case 2 -->
+    <div class="case-card">
+      <div class="case-icon">🔵</div>
+      <div class="case-name">Средний кейс</div>
+      <div class="case-desc">Увеличенные шансы на крутую награду</div>
+      <div class="case-reward">Награда: 1 000–4 000 монет</div>
+      <button class="case-buy-btn tier2" id="case-btn-2" onclick="buyCase(2)">
+        🛒 Купить за 2 000 монет
+      </button>
+    </div>
+
+    <!-- Case 3 -->
+    <div class="case-card">
+      <div class="case-icon">🟡</div>
+      <div class="case-name">Золотой кейс</div>
+      <div class="case-desc">Топовые награды — только для настоящих кликеров</div>
+      <div class="case-reward">Награда: 2 500–10 000 монет</div>
+      <button class="case-buy-btn tier3" id="case-btn-3" onclick="buyCase(3)">
+        🛒 Купить за 3 000 монет
+      </button>
     </div>
   </div>
+</div>
 
-  <div class="coin-wrapper">
-    <button class="coin-btn" id="coin" aria-label="Нажми для клика"></button>
+<!-- ══ MODAL ══ -->
+<div class="modal-overlay" id="modal">
+  <div class="modal-box">
+    <div class="modal-icon" id="modal-icon">🎉</div>
+    <div class="modal-title" id="modal-title">Поздравляем!</div>
+    <div class="modal-text"  id="modal-text">Вы открыли кейс</div>
+    <button class="modal-close" onclick="closeModal()">Забрать</button>
   </div>
-
-  <div class="level-badge">
-    <span>⚡</span>
-    <span id="level-text">Уровень 1</span>
-  </div>
-
-  <div class="progress-wrap">
-    <div class="progress-bar-bg">
-      <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
-    </div>
-    <div class="progress-label" id="progress-label">0 / 100 до следующего уровня</div>
-  </div>
-
-  <button class="upgrade-btn" id="upgrade-btn" disabled>
-    🚀 Улучшить клик — <span id="upgrade-cost">50</span> монет
-  </button>
 </div>
 
 <script>
-  // ── Telegram WebApp init ──────────────────────────────────────────────────
   const tg = window.Telegram?.WebApp;
-  if (tg) {
-    tg.ready();
-    tg.expand();
-  }
+  if (tg) { tg.ready(); tg.expand(); }
 
-  // ── State ─────────────────────────────────────────────────────────────────
-  const STORAGE_KEY = 'clicker_v1';
+  // ── State ──────────────────────────────────────────────────────────────────
+  const STORAGE_KEY = 'dym_clicker_v1';
 
   function defaultState() {
     return { coins: 0, totalClicks: 0, perClick: 0.1, level: 1, bestScore: 0 };
   }
-
   function loadState() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       return raw ? { ...defaultState(), ...JSON.parse(raw) } : defaultState();
     } catch { return defaultState(); }
   }
-
-  function saveState() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  }
+  function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
 
   let state = loadState();
 
-  // ── Upgrade config ────────────────────────────────────────────────────────
-  function upgradeCost(level) {
-    return Math.floor(50 * Math.pow(2.2, level - 1));
+  // ── Cases config ───────────────────────────────────────────────────────────
+  const CASES = {
+    1: { cost: 1000, min: 500,  max: 1500,  icon: '🟢', name: 'Лёгкий кейс' },
+    2: { cost: 2000, min: 1000, max: 4000,  icon: '🔵', name: 'Средний кейс' },
+    3: { cost: 3000, min: 2500, max: 10000, icon: '🟡', name: 'Золотой кейс' },
+  };
+
+  // ── Tab switch ─────────────────────────────────────────────────────────────
+  function switchTab(tab) {
+    document.getElementById('page-game').classList.toggle('active',  tab === 'game');
+    document.getElementById('page-cases').classList.toggle('active', tab === 'cases');
+    document.getElementById('tab-game').classList.toggle('active',   tab === 'game');
+    document.getElementById('tab-cases').classList.toggle('active',  tab === 'cases');
+    if (tab === 'cases') renderCases();
   }
 
-  // ── DOM refs ──────────────────────────────────────────────────────────────
-  const scoreEl      = document.getElementById('score');
-  const perClickEl   = document.getElementById('per-click');
-  const totalClickEl = document.getElementById('total-clicks');
-  const bestEl       = document.getElementById('best-score');
-  const levelEl      = document.getElementById('level-text');
-  const progressFill = document.getElementById('progress-fill');
-  const progressLbl  = document.getElementById('progress-label');
-  const upgradeBtn   = document.getElementById('upgrade-btn');
-  const upgradeCostEl= document.getElementById('upgrade-cost');
-  const coinBtn      = document.getElementById('coin');
+  // ── Upgrade config ─────────────────────────────────────────────────────────
+  function upgradeCost(level) { return Math.floor(50 * Math.pow(2.2, level - 1)); }
 
-  // ── Render ────────────────────────────────────────────────────────────────
+  // ── DOM refs ───────────────────────────────────────────────────────────────
+  const scoreEl       = document.getElementById('score');
+  const perClickEl    = document.getElementById('per-click');
+  const totalClickEl  = document.getElementById('total-clicks');
+  const bestEl        = document.getElementById('best-score');
+  const levelEl       = document.getElementById('level-text');
+  const progressFill  = document.getElementById('progress-fill');
+  const progressLbl   = document.getElementById('progress-label');
+  const upgradeBtn    = document.getElementById('upgrade-btn');
+  const upgradeCostEl = document.getElementById('upgrade-cost');
+  const coinBtn       = document.getElementById('coin');
+
+  // ── Render game ────────────────────────────────────────────────────────────
   function render() {
     scoreEl.textContent      = formatNum(state.coins);
     perClickEl.textContent   = '+' + state.perClick.toFixed(1);
@@ -388,54 +428,48 @@
     bestEl.textContent       = formatNum(state.bestScore);
     levelEl.textContent      = 'Уровень ' + state.level;
 
-    const cost      = upgradeCost(state.level);
-    const nextLevel = state.level + 1;
-    const threshold = upgradeCost(state.level);  // reuse as level progress threshold
-    const pct       = Math.min(100, Math.floor((state.coins / cost) * 100));
-
-    progressFill.style.width = pct + '%';
-    progressLbl.textContent  = formatNum(state.coins) + ' / ' + formatNum(cost) + ' до улучшения';
-
+    const cost = upgradeCost(state.level);
+    const pct  = Math.min(100, Math.floor((state.coins / cost) * 100));
+    progressFill.style.width  = pct + '%';
+    progressLbl.textContent   = formatNum(state.coins) + ' / ' + formatNum(cost) + ' до улучшения';
     upgradeCostEl.textContent = formatNum(cost);
-    upgradeBtn.disabled = state.coins < cost;
+    upgradeBtn.disabled       = state.coins < cost;
+  }
+
+  // ── Render cases ───────────────────────────────────────────────────────────
+  function renderCases() {
+    document.getElementById('cases-balance').textContent = formatNum(state.coins);
+    for (const id of [1, 2, 3]) {
+      const btn = document.getElementById('case-btn-' + id);
+      btn.disabled = state.coins < CASES[id].cost;
+    }
   }
 
   function formatNum(n) {
     if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + 'M';
     if (n >= 1_000)     return (n / 1_000).toFixed(1) + 'K';
-    // Show one decimal place for fractional values under 1000
     return Number.isInteger(n) ? String(n) : n.toFixed(1);
   }
 
-  // ── Click handler ─────────────────────────────────────────────────────────
+  // ── Click handler ──────────────────────────────────────────────────────────
   coinBtn.addEventListener('click', (e) => {
-    // Skip if touch already handled it
     if (coinBtn._touchFired) { coinBtn._touchFired = false; return; }
     doClick(e.clientX, e.clientY);
   });
-
-  // Multi-touch support
   coinBtn.addEventListener('touchstart', (e) => {
     e.preventDefault();
     coinBtn._touchFired = true;
-    for (const t of e.changedTouches) {
-      doClick(t.clientX, t.clientY);
-    }
+    for (const t of e.changedTouches) doClick(t.clientX, t.clientY);
   }, { passive: false });
 
   function doClick(x, y) {
     state.coins = Math.round((state.coins + state.perClick) * 10) / 10;
     state.totalClicks += 1;
     if (state.coins > state.bestScore) state.bestScore = state.coins;
-
-    // Haptic
     tg?.HapticFeedback?.impactOccurred('light');
-
-    // Visual feedback
     spawnFloatLabel(x, y, '+' + state.perClick.toFixed(1));
     spawnRing();
     bumpScore();
-
     saveState();
     render();
   }
@@ -446,7 +480,6 @@
     scoreEl.classList.add('bump');
     setTimeout(() => scoreEl.classList.remove('bump'), 120);
   }
-
   function spawnFloatLabel(x, y, text) {
     const el = document.createElement('div');
     el.className = 'float-label';
@@ -456,7 +489,6 @@
     document.body.appendChild(el);
     el.addEventListener('animationend', () => el.remove());
   }
-
   function spawnRing() {
     const wrapper = document.querySelector('.coin-wrapper');
     const ring = document.createElement('div');
@@ -465,19 +497,50 @@
     ring.addEventListener('animationend', () => ring.remove());
   }
 
-  // ── Upgrade handler ───────────────────────────────────────────────────────
+  // ── Upgrade handler ────────────────────────────────────────────────────────
   upgradeBtn.addEventListener('click', () => {
     const cost = upgradeCost(state.level);
     if (state.coins < cost) return;
     state.coins    -= cost;
-    state.perClick = Math.round((state.perClick + 0.1) * 10) / 10;
+    state.perClick  = Math.round((state.perClick + 0.1) * 10) / 10;
     state.level    += 1;
     tg?.HapticFeedback?.notificationOccurred('success');
     saveState();
     render();
   });
 
-  // ── Particles background ──────────────────────────────────────────────────
+  // ── Case handler ───────────────────────────────────────────────────────────
+  function buyCase(id) {
+    const c = CASES[id];
+    if (state.coins < c.cost) return;
+
+    state.coins -= c.cost;
+
+    // Random reward in range
+    const reward = Math.floor(Math.random() * (c.max - c.min + 1)) + c.min;
+    state.coins  = Math.round((state.coins + reward) * 10) / 10;
+    if (state.coins > state.bestScore) state.bestScore = state.coins;
+
+    tg?.HapticFeedback?.notificationOccurred('success');
+    saveState();
+    render();
+    renderCases();
+    showModal(c.icon, c.name, reward);
+  }
+
+  // ── Modal ──────────────────────────────────────────────────────────────────
+  function showModal(icon, name, reward) {
+    document.getElementById('modal-icon').textContent  = icon;
+    document.getElementById('modal-title').textContent = name + ' открыт!';
+    document.getElementById('modal-text').textContent  =
+      'Ты выиграл ' + formatNum(reward) + ' монет! 🎉\nМонеты уже зачислены на счёт.';
+    document.getElementById('modal').classList.add('show');
+  }
+  function closeModal() {
+    document.getElementById('modal').classList.remove('show');
+  }
+
+  // ── Particles ──────────────────────────────────────────────────────────────
   function createParticles() {
     const container = document.getElementById('particles');
     const colors = ['#f7971e','#ffd200','#ff6b6b','#a18cd1','#fbc2eb'];
@@ -486,18 +549,16 @@
       p.className = 'particle';
       const size = 6 + Math.random() * 14;
       p.style.cssText = `
-        width:${size}px; height:${size}px;
+        width:${size}px;height:${size}px;
         left:${Math.random()*100}%;
         background:${colors[Math.floor(Math.random()*colors.length)]};
-        animation-duration:${8 + Math.random()*12}s;
+        animation-duration:${8+Math.random()*12}s;
         animation-delay:${-Math.random()*15}s;
       `;
       container.appendChild(p);
     }
   }
   createParticles();
-
-  // ── Initial render ────────────────────────────────────────────────────────
   render();
 </script>
 </body>
