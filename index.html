@@ -239,6 +239,92 @@
     .case-buy-btn:disabled { opacity: 0.35; cursor: not-allowed; }
     .case-buy-btn:not(:disabled):active { transform: scale(0.97); }
 
+    /* ── Case opening animation overlay ── */
+    .case-opening-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .case-opening-overlay.show { display: flex; }
+
+    .case-anim-box {
+      position: relative;
+      width: 300px;
+      height: 200px;
+      overflow: hidden;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.05);
+      border: 2px solid rgba(255,255,255,0.15);
+    }
+    .case-items-strip {
+      display: flex;
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      transition: left 3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .case-item {
+      width: 100px;
+      height: 100px;
+      flex-shrink: 0;
+      margin: 0 10px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.1);
+      border: 2px solid rgba(255,255,255,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .case-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .case-selector {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 4px;
+      height: 120px;
+      background: linear-gradient(180deg, transparent, #ffd200, transparent);
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    .case-result-text {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #ffd200;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+    .case-result-text.show { opacity: 1; }
+
+    .case-claim-btn {
+      padding: 14px 40px;
+      border-radius: 16px;
+      border: none;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: 700;
+      background: linear-gradient(90deg,#f7971e,#ffd200);
+      color: #1a0a00;
+      opacity: 0;
+      transition: opacity 0.5s, transform 0.1s;
+    }
+    .case-claim-btn.show { opacity: 1; }
+    .case-claim-btn:active { transform: scale(0.95); }
+
     /* ── Modal overlay ── */
     .modal-overlay {
       display: none;
@@ -263,7 +349,7 @@
     @keyframes pop-in { from { transform: scale(0.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
     .modal-icon   { font-size: 4rem; line-height: 1; margin-bottom: 12px; }
     .modal-title  { font-size: 1.3rem; font-weight: 800; color: #ffd200; margin-bottom: 8px; }
-    .modal-text   { font-size: 0.95rem; color: rgba(255,255,255,0.75); line-height: 1.5; margin-bottom: 20px; }
+    .modal-text   { font-size: 0.95rem; color: rgba(255,255,255,0.75); line-height: 1.5; margin-bottom: 20px; white-space: pre-line; }
     .modal-close  {
       padding: 12px 32px; border-radius: 14px; border: none; cursor: pointer;
       background: linear-gradient(90deg,#f7971e,#ffd200); color: #1a0a00;
@@ -329,7 +415,7 @@
       <div class="case-icon">🟢</div>
       <div class="case-name">Лёгкий кейс</div>
       <div class="case-desc">Небольшая награда — хороший старт для новичка</div>
-      <div class="case-reward">Награда: 500–1 500 монет</div>
+      <div class="case-reward">Награда: 3 изображения</div>
       <button class="case-buy-btn tier1" id="case-btn-1" onclick="buyCase(1)">
         🛒 Купить за 1 000 монет
       </button>
@@ -359,13 +445,23 @@
   </div>
 </div>
 
+<!-- ══ CASE OPENING ANIMATION ══ -->
+<div class="case-opening-overlay" id="case-anim-overlay">
+  <div class="case-anim-box">
+    <div class="case-items-strip" id="case-items-strip"></div>
+    <div class="case-selector"></div>
+  </div>
+  <div class="case-result-text" id="case-result-text"></div>
+  <button class="case-claim-btn" id="case-claim-btn" onclick="claimCaseReward()">Забрать</button>
+</div>
+
 <!-- ══ MODAL ══ -->
 <div class="modal-overlay" id="modal">
   <div class="modal-box">
     <div class="modal-icon" id="modal-icon">🎉</div>
     <div class="modal-title" id="modal-title">Поздравляем!</div>
     <div class="modal-text"  id="modal-text">Вы открыли кейс</div>
-    <button class="modal-close" onclick="closeModal()">Забрать</button>
+    <button class="modal-close" onclick="closeModal()">Закрыть</button>
   </div>
 </div>
 
@@ -374,10 +470,10 @@
   if (tg) { tg.ready(); tg.expand(); }
 
   // ── State ──────────────────────────────────────────────────────────────────
-  const STORAGE_KEY = 'dym_clicker_v1';
+  const STORAGE_KEY = 'dym_clicker_v2';
 
   function defaultState() {
-    return { coins: 0, totalClicks: 0, perClick: 0.1, level: 1, bestScore: 0 };
+    return { coins: 200000, totalClicks: 0, perClick: 0.1, level: 1, bestScore: 200000 };
   }
   function loadState() {
     try {
@@ -391,10 +487,12 @@
 
   // ── Cases config ───────────────────────────────────────────────────────────
   const CASES = {
-    1: { cost: 1000, min: 500,  max: 1500,  icon: '🟢', name: 'Лёгкий кейс' },
+    1: { cost: 1000, items: ['1000-1.jpg','1000-2.jpg','1000-3.jpg'], icon: '🟢', name: 'Лёгкий кейс' },
     2: { cost: 2000, min: 1000, max: 4000,  icon: '🔵', name: 'Средний кейс' },
     3: { cost: 3000, min: 2500, max: 10000, icon: '🟡', name: 'Золотой кейс' },
   };
+
+  let currentCaseReward = null;
 
   // ── Tab switch ─────────────────────────────────────────────────────────────
   function switchTab(tab) {
@@ -515,25 +613,94 @@
     if (state.coins < c.cost) return;
 
     state.coins -= c.cost;
-
-    // Random reward in range
-    const reward = Math.floor(Math.random() * (c.max - c.min + 1)) + c.min;
-    state.coins  = Math.round((state.coins + reward) * 10) / 10;
-    if (state.coins > state.bestScore) state.bestScore = state.coins;
-
-    tg?.HapticFeedback?.notificationOccurred('success');
     saveState();
     render();
     renderCases();
-    showModal(c.icon, c.name, reward);
+
+    if (id === 1) {
+      // Case with images — show animation
+      openCaseAnimation(c);
+    } else {
+      // Cases 2 & 3 — coins reward
+      const reward = Math.floor(Math.random() * (c.max - c.min + 1)) + c.min;
+      state.coins  = Math.round((state.coins + reward) * 10) / 10;
+      if (state.coins > state.bestScore) state.bestScore = state.coins;
+      tg?.HapticFeedback?.notificationOccurred('success');
+      saveState();
+      render();
+      renderCases();
+      showModal(c.icon, c.name, 'Ты выиграл ' + formatNum(reward) + ' монет! 🎉\nМонеты зачислены на счёт.');
+    }
+  }
+
+  // ── Case opening animation ─────────────────────────────────────────────────
+  function openCaseAnimation(c) {
+    const overlay = document.getElementById('case-anim-overlay');
+    const strip   = document.getElementById('case-items-strip');
+    const resultText = document.getElementById('case-result-text');
+    const claimBtn   = document.getElementById('case-claim-btn');
+
+    // Reset
+    strip.innerHTML = '';
+    strip.style.transition = 'none';
+    strip.style.left = '0px';
+    resultText.textContent = '';
+    resultText.classList.remove('show');
+    claimBtn.classList.remove('show');
+
+    // Build strip (30 items, repeating pattern)
+    const items = c.items;
+    const total = 30;
+    const winIndex = 15; // Middle item wins
+
+    for (let i = 0; i < total; i++) {
+      const div = document.createElement('div');
+      div.className = 'case-item';
+      const img = document.createElement('img');
+      img.src = items[i % items.length];
+      div.appendChild(img);
+      strip.appendChild(div);
+    }
+
+    overlay.classList.add('show');
+    tg?.HapticFeedback?.impactOccurred('medium');
+
+    // Start animation after frame
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const itemWidth = 120; // 100px + 20px margin
+        const offset = -(winIndex * itemWidth) + 100; // Center on selector (300/2 - 50)
+        strip.style.transition = 'left 3s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+        strip.style.left = offset + 'px';
+      });
+    });
+
+    // After animation completes
+    setTimeout(() => {
+      const wonImage = items[winIndex % items.length];
+      currentCaseReward = wonImage;
+      resultText.textContent = '🎉 Вы получили изображение!';
+      resultText.classList.add('show');
+      claimBtn.classList.add('show');
+      tg?.HapticFeedback?.notificationOccurred('success');
+    }, 3200);
+  }
+
+  function claimCaseReward() {
+    const overlay = document.getElementById('case-anim-overlay');
+    overlay.classList.remove('show');
+    
+    if (currentCaseReward) {
+      showModal('🖼', 'Награда получена', 'Изображение сохранено:\n' + currentCaseReward);
+      currentCaseReward = null;
+    }
   }
 
   // ── Modal ──────────────────────────────────────────────────────────────────
-  function showModal(icon, name, reward) {
+  function showModal(icon, title, text) {
     document.getElementById('modal-icon').textContent  = icon;
-    document.getElementById('modal-title').textContent = name + ' открыт!';
-    document.getElementById('modal-text').textContent  =
-      'Ты выиграл ' + formatNum(reward) + ' монет! 🎉\nМонеты уже зачислены на счёт.';
+    document.getElementById('modal-title').textContent = title;
+    document.getElementById('modal-text').textContent  = text;
     document.getElementById('modal').classList.add('show');
   }
   function closeModal() {
