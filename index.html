@@ -347,6 +347,74 @@
       line-height: 1.4;
     }
 
+    /* ── Shop products ── */
+    .back-btn {
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      border: none;
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-bottom: 16px;
+    }
+    .back-btn:active { background: rgba(255,255,255,0.12); }
+    
+    .category-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #ffd200;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .product-card {
+      width: 100%;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      backdrop-filter: blur(12px);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .product-info {
+      flex: 1;
+    }
+    .product-name {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .product-price {
+      font-size: 0.95rem;
+      color: #ffd200;
+      font-weight: 600;
+    }
+    .buy-btn {
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(90deg,#f7971e,#ffd200);
+      color: #1a0a00;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.1s;
+      white-space: nowrap;
+    }
+    .buy-btn:active { transform: scale(0.95); }
+    .buy-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
     /* ── Case opening animation overlay ── */
     .case-opening-overlay {
       display: none;
@@ -574,28 +642,36 @@
     <div class="page-title">🛒 Магазин</div>
     <div class="balance-display">Баланс: <span id="shop-balance">0</span> монет</div>
 
-    <div class="shop-category">
-      <div class="category-icon">🌬️</div>
-      <div class="category-name">Подики</div>
-      <div class="category-desc">Электронные системы нагревания</div>
+    <div id="shop-categories">
+      <div class="shop-category" onclick="openCategory('podiki')">
+        <div class="category-icon">🌬️</div>
+        <div class="category-name">Подики</div>
+        <div class="category-desc">Электронные системы нагревания</div>
+      </div>
+
+      <div class="shop-category" onclick="openCategory('liquids')">
+        <div class="category-icon">💧</div>
+        <div class="category-name">Жидкости</div>
+        <div class="category-desc">Заправки и жижи для вейпов</div>
+      </div>
+
+      <div class="shop-category" onclick="openCategory('disposables')">
+        <div class="category-icon">⚡</div>
+        <div class="category-name">Одноразки</div>
+        <div class="category-desc">Одноразовые электронные сигареты</div>
+      </div>
+
+      <div class="shop-category" onclick="openCategory('supplies')">
+        <div class="category-icon">🔧</div>
+        <div class="category-name">Расходники</div>
+        <div class="category-desc">Картриджи, испарители и аксессуары</div>
+      </div>
     </div>
 
-    <div class="shop-category">
-      <div class="category-icon">💧</div>
-      <div class="category-name">Жидкости</div>
-      <div class="category-desc">Заправки и жижи для вейпов</div>
-    </div>
-
-    <div class="shop-category">
-      <div class="category-icon">⚡</div>
-      <div class="category-name">Одноразки</div>
-      <div class="category-desc">Одноразовые электронные сигареты</div>
-    </div>
-
-    <div class="shop-category">
-      <div class="category-icon">🔧</div>
-      <div class="category-name">Расходники</div>
-      <div class="category-desc">Картриджи, испарители и аксессуары</div>
+    <div id="shop-products" style="display:none;">
+      <button class="back-btn" onclick="closeCategory()">← Назад</button>
+      <div class="category-title" id="category-title"></div>
+      <div id="products-list"></div>
     </div>
   </div>
 </div>
@@ -737,9 +813,93 @@
     }
   }
 
+  // ── Shop products data ─────────────────────────────────────────────────────
+  const SHOP_PRODUCTS = {
+    podiki: [
+      { name: 'Xros 3 mini', price: 1790 },
+      { name: 'Xros 4 mini', price: 1990 },
+      { name: 'Xros 5 mini', price: 2190 }
+    ],
+    liquids: [],
+    disposables: [],
+    supplies: []
+  };
+
+  const CATEGORY_NAMES = {
+    podiki: '🌬️ Подики',
+    liquids: '💧 Жидкости',
+    disposables: '⚡ Одноразки',
+    supplies: '🔧 Расходники'
+  };
+
+  let currentCategory = null;
+
+  // ── Shop functions ─────────────────────────────────────────────────────────
+  function openCategory(category) {
+    currentCategory = category;
+    document.getElementById('shop-categories').style.display = 'none';
+    document.getElementById('shop-products').style.display = 'block';
+    document.getElementById('category-title').textContent = CATEGORY_NAMES[category];
+    
+    const products = SHOP_PRODUCTS[category];
+    const list = document.getElementById('products-list');
+    list.innerHTML = '';
+
+    if (products.length === 0) {
+      list.innerHTML = '<div class="empty-state">Скоро здесь появятся товары</div>';
+      return;
+    }
+
+    products.forEach((product, index) => {
+      const card = document.createElement('div');
+      card.className = 'product-card';
+      const canBuy = state.coins >= product.price;
+      
+      card.innerHTML = `
+        <div class="product-info">
+          <div class="product-name">${product.name}</div>
+          <div class="product-price">${formatNum(product.price)} монет</div>
+        </div>
+        <button class="buy-btn" onclick="buyProduct('${category}', ${index})" ${!canBuy ? 'disabled' : ''}>
+          Купить
+        </button>
+      `;
+      list.appendChild(card);
+    });
+  }
+
+  function closeCategory() {
+    currentCategory = null;
+    document.getElementById('shop-categories').style.display = 'block';
+    document.getElementById('shop-products').style.display = 'none';
+  }
+
+  function buyProduct(category, index) {
+    const product = SHOP_PRODUCTS[category][index];
+    if (state.coins < product.price) {
+      showModal('❌', 'Недостаточно монет', 'У тебя не хватает монет для покупки этого товара');
+      return;
+    }
+
+    state.coins -= product.price;
+    saveState();
+    render();
+    renderShop();
+    
+    // Re-render products to update button states
+    openCategory(category);
+    
+    tg?.HapticFeedback?.notificationOccurred('success');
+    showModal('✅', 'Покупка успешна!', `Ты купил ${product.name} за ${formatNum(product.price)} монет!\n\nСвяжись с администратором для получения товара.`);
+  }
+
   // ── Render shop ────────────────────────────────────────────────────────────
   function renderShop() {
     document.getElementById('shop-balance').textContent = formatNum(state.coins);
+    // If we're viewing products, refresh them
+    if (currentCategory) {
+      openCategory(currentCategory);
+    }
   }
 
   // ── Render profile ─────────────────────────────────────────────────────────
