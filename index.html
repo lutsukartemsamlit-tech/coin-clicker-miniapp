@@ -437,6 +437,178 @@
       margin-left: 12px;
     }
 
+    /* ── Product detail page ── */
+    .product-detail-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      padding: 20px 0;
+    }
+    .product-detail-icon {
+      font-size: 5rem;
+      line-height: 1;
+      margin: 20px 0;
+    }
+    .product-detail-name {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #ffd200;
+      text-align: center;
+    }
+    .product-detail-desc {
+      font-size: 0.9rem;
+      color: rgba(150,155,180,0.9);
+      text-align: center;
+    }
+    .product-detail-price {
+      font-size: 1.1rem;
+      color: #fff;
+      font-weight: 600;
+      margin-top: 8px;
+    }
+
+    /* ── Flavor selector ── */
+    .flavor-label {
+      font-size: 0.95rem;
+      color: #fff;
+      font-weight: 600;
+      margin-top: 20px;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+    .flavor-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      width: 100%;
+    }
+    .flavor-btn {
+      padding: 10px 20px;
+      border-radius: 12px;
+      border: 2px solid rgba(100,105,150,0.3);
+      background: rgba(40,45,75,0.4);
+      color: rgba(200,205,230,0.8);
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .flavor-btn.selected {
+      border-color: #7b68ee;
+      background: rgba(123,104,238,0.3);
+      color: #fff;
+    }
+    .flavor-btn:active { transform: scale(0.96); }
+
+    /* ── Add to cart button ── */
+    .add-to-cart-btn {
+      width: 100%;
+      padding: 16px;
+      border-radius: 16px;
+      border: none;
+      background: linear-gradient(90deg, #7b68ee, #9b7ff5);
+      color: #fff;
+      font-size: 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.1s;
+      margin-top: 20px;
+      box-shadow: 0 4px 16px rgba(123,104,238,0.4);
+    }
+    .add-to-cart-btn:active { transform: scale(0.98); }
+
+    /* ── Cart styles ── */
+    .cart-item {
+      width: 100%;
+      background: linear-gradient(135deg, rgba(40,45,75,0.4) 0%, rgba(25,30,50,0.6) 100%);
+      border: 1px solid rgba(80,85,120,0.2);
+      border-radius: 18px;
+      padding: 16px 18px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .cart-item-info {
+      flex: 1;
+    }
+    .cart-item-name {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .cart-item-flavor {
+      font-size: 0.8rem;
+      color: rgba(150,155,180,0.8);
+      margin-bottom: 6px;
+    }
+    .cart-item-price {
+      font-size: 0.9rem;
+      color: #fff;
+      font-weight: 600;
+    }
+    .cart-item-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .cart-qty-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: none;
+      background: rgba(100,105,150,0.3);
+      color: #fff;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .cart-qty-btn:active { background: rgba(120,125,170,0.4); }
+    .cart-qty {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
+      min-width: 24px;
+      text-align: center;
+    }
+
+    .cart-total-box {
+      width: 100%;
+      background: rgba(40,45,75,0.4);
+      border: 1px solid rgba(100,105,150,0.2);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #fff;
+    }
+    .cart-total-price {
+      font-size: 1.4rem;
+      color: #ffd200;
+    }
+
+    .checkout-btn {
+      width: 100%;
+      padding: 16px;
+      border-radius: 16px;
+      border: none;
+      background: linear-gradient(90deg, #4caf50, #66bb6a);
+      color: #fff;
+      font-size: 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.1s;
+      box-shadow: 0 4px 16px rgba(76,175,80,0.4);
+    }
+    .checkout-btn:active { transform: scale(0.98); }
+
     /* ── Case opening animation overlay ── */
     .case-opening-overlay {
       display: none;
@@ -696,6 +868,28 @@
       </div>
       <div id="products-list"></div>
     </div>
+
+    <div id="product-detail" style="display:none;">
+      <div class="shop-header">
+        <button class="back-btn-icon" onclick="closeProductDetail()">←</button>
+        <div class="shop-header-title" id="product-detail-title"></div>
+      </div>
+      <div class="product-detail-content">
+        <div class="product-detail-icon" id="product-detail-icon">📦</div>
+        <div class="product-detail-name" id="product-detail-name"></div>
+        <div class="product-detail-desc" id="product-detail-desc"></div>
+        <div class="product-detail-price" id="product-detail-price"></div>
+        
+        <div id="flavor-selector" style="display:none;">
+          <div class="flavor-label">Выберите вкус (можно несколько)</div>
+          <div class="flavor-buttons" id="flavor-buttons"></div>
+        </div>
+
+        <button class="add-to-cart-btn" id="add-to-cart-btn" onclick="addToCart()">
+          🛒 Добавить в корзину
+        </button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -703,7 +897,17 @@
 <div class="page" id="page-cart">
   <div class="generic-container">
     <div class="page-title">🛍 Корзина</div>
-    <div class="empty-state">Ваша корзина пуста</div>
+    <div id="cart-content"></div>
+    <div id="cart-empty" class="empty-state">Ваша корзина пуста</div>
+    <div id="cart-total" style="display:none;">
+      <div class="cart-total-box">
+        <span>Итого:</span>
+        <span class="cart-total-price" id="cart-total-price">0 ₽</span>
+      </div>
+      <button class="checkout-btn" onclick="checkout()">
+        ✅ Оформить заказ
+      </button>
+    </div>
   </div>
 </div>
 
@@ -793,6 +997,7 @@
     });
     if (tab === 'cases') renderCases();
     if (tab === 'shop') renderShop();
+    if (tab === 'cart') renderCart();
     if (tab === 'profile') renderProfile();
   }
 
@@ -839,16 +1044,16 @@
   // ── Shop products data ─────────────────────────────────────────────────────
   const SHOP_PRODUCTS = {
     podiki: [
-      { name: 'Xros 3 mini', price: 1790, desc: '5 товаров' },
-      { name: 'Xros 4 mini', price: 1990, desc: '5 товаров' },
-      { name: 'Xros 5 mini', price: 2190, desc: '5 товаров' }
+      { name: 'Xros 3 mini', price: 1790, desc: '5 товаров', icon: '📦', flavors: null },
+      { name: 'Xros 4 mini', price: 1990, desc: '5 товаров', icon: '📦', flavors: null },
+      { name: 'Xros 5 mini', price: 2190, desc: '5 товаров', icon: '📦', flavors: null }
     ],
     liquids: [
-      { name: 'Грех 80мг', price: 550, desc: '2 вкуса' },
-      { name: 'Annima x Самоубийца v2', price: 550, desc: '2 вкуса' },
-      { name: 'Rick and Morty Bad Trip', price: 550, desc: '2 вкуса' },
-      { name: 'Rick and Morty Russia', price: 550, desc: '2 вкуса' },
-      { name: 'Phobia x анархия', price: 550, desc: '2 вкуса' }
+      { name: 'Грех 80мг', price: 550, desc: '2 вкуса', icon: '📦', flavors: ['Энергетик вишня лёд', 'Энергетик арбуз'] },
+      { name: 'Annima x Самоубийца v2', price: 550, desc: '2 вкуса', icon: '📦', flavors: ['Энергетик вишня лёд', 'Энергетик арбуз'] },
+      { name: 'Rick and Morty Bad Trip', price: 550, desc: '2 вкуса', icon: '📦', flavors: ['Энергетик вишня лёд', 'Энергетик арбуз'] },
+      { name: 'Rick and Morty Russia', price: 550, desc: '2 вкуса', icon: '📦', flavors: ['Энергетик вишня лёд', 'Энергетик арбуз'] },
+      { name: 'Phobia x анархия', price: 550, desc: '2 вкуса', icon: '📦', flavors: ['Энергетик вишня лёд', 'Энергетик арбуз'] }
     ],
     disposables: [],
     supplies: []
@@ -862,7 +1067,27 @@
   };
 
   let currentCategory = null;
+  let currentProduct = null;
+  let selectedFlavors = [];
   let cart = [];
+
+  // Load cart from localStorage
+  function loadCart() {
+    try {
+      const saved = localStorage.getItem('dym_cart');
+      if (saved) cart = JSON.parse(saved);
+    } catch (e) {}
+  }
+
+  function saveCart() {
+    localStorage.setItem('dym_cart', JSON.stringify(cart));
+    updateCartBadge();
+  }
+
+  function updateCartBadge() {
+    const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+    // Update tab badge if needed
+  }
 
   // ── Shop functions ─────────────────────────────────────────────────────────
   function openCategory(category) {
@@ -905,20 +1130,182 @@
 
   function showProductDetail(category, index) {
     const product = SHOP_PRODUCTS[category][index];
-    const user = tg?.initDataUnsafe?.user;
+    currentProduct = { category, index, product };
+    selectedFlavors = [];
+    
+    document.getElementById('shop-products').style.display = 'none';
+    document.getElementById('product-detail').style.display = 'block';
+    
+    document.getElementById('product-detail-title').textContent = CATEGORY_NAMES[category];
+    document.getElementById('product-detail-icon').textContent = product.icon;
+    document.getElementById('product-detail-name').textContent = product.name;
+    document.getElementById('product-detail-desc').textContent = product.desc;
+    document.getElementById('product-detail-price').textContent = product.price + ' ₽';
+    
+    const flavorSelector = document.getElementById('flavor-selector');
+    const flavorButtons = document.getElementById('flavor-buttons');
+    
+    if (product.flavors && product.flavors.length > 0) {
+      flavorSelector.style.display = 'block';
+      flavorButtons.innerHTML = '';
+      
+      product.flavors.forEach((flavor, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'flavor-btn';
+        btn.textContent = flavor;
+        btn.onclick = () => toggleFlavor(idx, btn);
+        flavorButtons.appendChild(btn);
+      });
+    } else {
+      flavorSelector.style.display = 'none';
+    }
     
     tg?.HapticFeedback?.impactOccurred('medium');
-    showModal(
-      '📦', 
-      product.name, 
-      `${product.desc}\n${product.price} ₽\n\nНажми "Закрыть" и свяжись с администратором для оформления заказа.\n\nТвой ID: ${user?.id || 'неизвестен'}`
+  }
+
+  function closeProductDetail() {
+    currentProduct = null;
+    selectedFlavors = [];
+    document.getElementById('product-detail').style.display = 'none';
+    document.getElementById('shop-products').style.display = 'block';
+  }
+
+  function toggleFlavor(index, btn) {
+    const flavorIdx = selectedFlavors.indexOf(index);
+    if (flavorIdx > -1) {
+      selectedFlavors.splice(flavorIdx, 1);
+      btn.classList.remove('selected');
+    } else {
+      selectedFlavors.push(index);
+      btn.classList.add('selected');
+    }
+    tg?.HapticFeedback?.impactOccurred('light');
+  }
+
+  function addToCart() {
+    if (!currentProduct) return;
+    
+    const { product } = currentProduct;
+    
+    if (product.flavors && product.flavors.length > 0 && selectedFlavors.length === 0) {
+      showModal('⚠️', 'Выберите вкус', 'Пожалуйста, выберите хотя бы один вкус');
+      return;
+    }
+    
+    const flavors = selectedFlavors.map(i => product.flavors[i]);
+    const flavorText = flavors.length > 0 ? flavors.join(', ') : null;
+    
+    // Check if same item with same flavors exists
+    const existingIndex = cart.findIndex(item => 
+      item.name === product.name && item.flavor === flavorText
     );
+    
+    if (existingIndex > -1) {
+      cart[existingIndex].quantity += 1;
+    } else {
+      cart.push({
+        name: product.name,
+        price: product.price,
+        flavor: flavorText,
+        quantity: 1
+      });
+    }
+    
+    saveCart();
+    tg?.HapticFeedback?.notificationOccurred('success');
+    showModal('✅', 'Добавлено в корзину', `${product.name} добавлен в корзину`);
+    
+    setTimeout(() => {
+      closeProductDetail();
+      closeCategory();
+    }, 1000);
+  }
+
+  function renderCart() {
+    const content = document.getElementById('cart-content');
+    const empty = document.getElementById('cart-empty');
+    const total = document.getElementById('cart-total');
+    
+    if (cart.length === 0) {
+      content.innerHTML = '';
+      content.style.display = 'none';
+      empty.style.display = 'block';
+      total.style.display = 'none';
+      return;
+    }
+    
+    empty.style.display = 'none';
+    content.style.display = 'block';
+    total.style.display = 'block';
+    content.innerHTML = '';
+    
+    let totalPrice = 0;
+    
+    cart.forEach((item, index) => {
+      totalPrice += item.price * item.quantity;
+      
+      const cartItem = document.createElement('div');
+      cartItem.className = 'cart-item';
+      cartItem.innerHTML = `
+        <div class="cart-item-info">
+          <div class="cart-item-name">${item.name}</div>
+          ${item.flavor ? `<div class="cart-item-flavor">${item.flavor}</div>` : ''}
+          <div class="cart-item-price">${item.price} ₽</div>
+        </div>
+        <div class="cart-item-controls">
+          <button class="cart-qty-btn" onclick="changeQuantity(${index}, -1)">−</button>
+          <div class="cart-qty">${item.quantity}</div>
+          <button class="cart-qty-btn" onclick="changeQuantity(${index}, 1)">+</button>
+        </div>
+      `;
+      content.appendChild(cartItem);
+    });
+    
+    document.getElementById('cart-total-price').textContent = totalPrice + ' ₽';
+  }
+
+  function changeQuantity(index, delta) {
+    cart[index].quantity += delta;
+    if (cart[index].quantity <= 0) {
+      cart.splice(index, 1);
+    }
+    saveCart();
+    renderCart();
+    tg?.HapticFeedback?.impactOccurred('light');
+  }
+
+  function checkout() {
+    if (cart.length === 0) return;
+    
+    const user = tg?.initDataUnsafe?.user;
+    const orderText = cart.map(item => 
+      `${item.name}${item.flavor ? ' (' + item.flavor + ')' : ''} x${item.quantity} — ${item.price * item.quantity} ₽`
+    ).join('\n');
+    
+    const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    
+    tg?.HapticFeedback?.notificationOccurred('success');
+    showModal(
+      '✅',
+      'Заказ оформлен!',
+      `Ваш заказ:\n\n${orderText}\n\nИтого: ${total} ₽\n\nСвяжись с администратором для оплаты.\n\nТвой ID: ${user?.id || 'неизвестен'}`
+    );
+    
+    // Clear cart after order
+    setTimeout(() => {
+      cart = [];
+      saveCart();
+      renderCart();
+    }, 2000);
   }
 
   // ── Render shop ────────────────────────────────────────────────────────────
   function renderShop() {
     // Shop doesn't need balance anymore
   }
+
+  // Load cart on init
+  loadCart();
 
   // ── Render profile ─────────────────────────────────────────────────────────
   function renderProfile() {
