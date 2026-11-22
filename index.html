@@ -309,6 +309,44 @@
       padding: 40px 20px;
     }
 
+    /* ── Shop categories ── */
+    .shop-category {
+      width: 100%;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
+    }
+    .shop-category:active {
+      transform: scale(0.98);
+      background: rgba(255,255,255,0.12);
+      box-shadow: 0 0 20px rgba(255,210,0,0.3);
+    }
+    .category-icon {
+      font-size: 3rem;
+      line-height: 1;
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+    }
+    .category-name {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #ffd200;
+      text-align: center;
+    }
+    .category-desc {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.6);
+      text-align: center;
+      line-height: 1.4;
+    }
+
     /* ── Case opening animation overlay ── */
     .case-opening-overlay {
       display: none;
@@ -534,7 +572,31 @@
 <div class="page" id="page-shop">
   <div class="generic-container">
     <div class="page-title">🛒 Магазин</div>
-    <div class="empty-state">Скоро здесь появятся товары для покупки</div>
+    <div class="balance-display">Баланс: <span id="shop-balance">0</span> монет</div>
+
+    <div class="shop-category">
+      <div class="category-icon">🌬️</div>
+      <div class="category-name">Подики</div>
+      <div class="category-desc">Электронные системы нагревания</div>
+    </div>
+
+    <div class="shop-category">
+      <div class="category-icon">💧</div>
+      <div class="category-name">Жидкости</div>
+      <div class="category-desc">Заправки и жижи для вейпов</div>
+    </div>
+
+    <div class="shop-category">
+      <div class="category-icon">⚡</div>
+      <div class="category-name">Одноразки</div>
+      <div class="category-desc">Одноразовые электронные сигареты</div>
+    </div>
+
+    <div class="shop-category">
+      <div class="category-icon">🔧</div>
+      <div class="category-name">Расходники</div>
+      <div class="category-desc">Картриджи, испарители и аксессуары</div>
+    </div>
   </div>
 </div>
 
@@ -631,6 +693,7 @@
       document.getElementById('tab-' + t).classList.toggle('active', t === tab);
     });
     if (tab === 'cases') renderCases();
+    if (tab === 'shop') renderShop();
     if (tab === 'profile') renderProfile();
   }
 
@@ -672,6 +735,11 @@
       const btn = document.getElementById('case-btn-' + id);
       btn.disabled = state.coins < CASES[id].cost;
     }
+  }
+
+  // ── Render shop ────────────────────────────────────────────────────────────
+  function renderShop() {
+    document.getElementById('shop-balance').textContent = formatNum(state.coins);
   }
 
   // ── Render profile ─────────────────────────────────────────────────────────
