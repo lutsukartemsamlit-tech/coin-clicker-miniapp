@@ -410,10 +410,6 @@
       white-space: nowrap;
     }
     .buy-btn:active { transform: scale(0.95); }
-    .buy-btn:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
-    }
 
     /* ── Case opening animation overlay ── */
     .case-opening-overlay {
@@ -853,15 +849,14 @@
     products.forEach((product, index) => {
       const card = document.createElement('div');
       card.className = 'product-card';
-      const canBuy = state.coins >= product.price;
       
       card.innerHTML = `
         <div class="product-info">
           <div class="product-name">${product.name}</div>
-          <div class="product-price">${formatNum(product.price)} монет</div>
+          <div class="product-price">${product.price} ₽</div>
         </div>
-        <button class="buy-btn" onclick="buyProduct('${category}', ${index})" ${!canBuy ? 'disabled' : ''}>
-          Купить
+        <button class="buy-btn" onclick="orderProduct('${category}', ${index})">
+          Заказать
         </button>
       `;
       list.appendChild(card);
@@ -874,32 +869,22 @@
     document.getElementById('shop-products').style.display = 'none';
   }
 
-  function buyProduct(category, index) {
+  function orderProduct(category, index) {
     const product = SHOP_PRODUCTS[category][index];
-    if (state.coins < product.price) {
-      showModal('❌', 'Недостаточно монет', 'У тебя не хватает монет для покупки этого товара');
-      return;
-    }
-
-    state.coins -= product.price;
-    saveState();
-    render();
-    renderShop();
-    
-    // Re-render products to update button states
-    openCategory(category);
+    const user = tg?.initDataUnsafe?.user;
+    const username = user?.username ? `@${user.username}` : user?.first_name || 'пользователь';
     
     tg?.HapticFeedback?.notificationOccurred('success');
-    showModal('✅', 'Покупка успешна!', `Ты купил ${product.name} за ${formatNum(product.price)} монет!\n\nСвяжись с администратором для получения товара.`);
+    showModal(
+      '📦', 
+      'Заказ оформлен!', 
+      `Товар: ${product.name}\nЦена: ${product.price} ₽\n\nСвяжись с администратором для оплаты и получения товара.\n\nТвой ID: ${user?.id || 'неизвестен'}`
+    );
   }
 
   // ── Render shop ────────────────────────────────────────────────────────────
   function renderShop() {
     document.getElementById('shop-balance').textContent = formatNum(state.coins);
-    // If we're viewing products, refresh them
-    if (currentCategory) {
-      openCategory(currentCategory);
-    }
   }
 
   // ── Render profile ─────────────────────────────────────────────────────────
